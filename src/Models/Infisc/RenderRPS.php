@@ -749,8 +749,8 @@ class RenderRPS
                 false
             );
             
-            self::$dom->appChild($det, $serv, 'Adicionando tag Endereco do Prestador');
-            self::$dom->appChild($infRPS, $det, 'Adicionando tag Transportadora em infRPS');
+            self::$dom->appChild($det, $serv, 'Adicionando tag Serviço');
+            self::$dom->appChild($infRPS, $det, 'Adicionando tag det em infRPS');
         }
         
          //Totais
@@ -800,7 +800,7 @@ class RenderRPS
         self::$dom->addChild(
             $ISS,
             'vBCISS',
-            number_format($rps->totalvBCISS, 2),
+            number_format($rps->totalvBCISS, 2, '.', ''),
             true,
             'Valor total da base cálculo ISSQN',
             false
@@ -808,7 +808,7 @@ class RenderRPS
         self::$dom->addChild(
             $ISS,
             'vISS',
-            number_format($rps->totalvISS, 2),
+            number_format($rps->totalvISS, 2, '.', ''),
             true,
             'Valor total ISS',
             false
@@ -816,6 +816,46 @@ class RenderRPS
         
         self::$dom->appChild($total, $ISS, 'Adicionando tag ISS');
         self::$dom->appChild($infRPS, $total, 'Adicionando tag Total em infRPS');
+        
+        //Faturas
+        $faturas = self::$dom->createElement('faturas');
+        foreach ($rps->fat as $fatura) {
+            $fat = self::$dom->createElement('fat');
+            self::$dom->addChild(
+                $fat,
+                'nItem',
+                $fatura->nItem,
+                true,
+                'Número sequencial para ordenar faturas',
+                false
+            );
+            self::$dom->addChild(
+                $fat,
+                'nFat',
+                $fatura->nFat,
+                true,
+                'Número da fatura',
+                false
+            );
+            self::$dom->addChild(
+                $fat,
+                'dVenc',
+                $fatura->dVenc,
+                false,
+                'Data de vencimento da fatura',
+                false
+            );
+            self::$dom->addChild(
+                $fat,
+                'vFat',
+                $fatura->vFat,
+                true,
+                'Valor da fatura',
+                false
+            );
+            self::$dom->appChild($faturas, $fat, 'Adicionando tag fat em faturas');
+        }
+        self::$dom->appChild($infRPS, $faturas, 'Adicionando tag fatura em infRPS');
         
         //Informações adicionais
         self::$dom->addChild(
@@ -837,7 +877,6 @@ class RenderRPS
             );
         }
                 
-
         self::$dom->appChild($root, $infRPS, 'Adicionando tag infRPS em RPS');
         self::$dom->appendChild($root);
         $xml = str_replace('<?xml version="1.0" encoding="utf-8"?>', '', self::$dom->saveXML());
