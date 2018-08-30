@@ -687,7 +687,7 @@ class RenderRPS
             self::$dom->addChild(
                 $serv,
                 'vRetCOFINS',
-                $rps->serv[$d->nItem]->pRetCOFINS,
+                $rps->serv[$d->nItem]->vRetCOFINS,
                 false,
                 '',
                 false
@@ -795,7 +795,52 @@ class RenderRPS
             'Valor Total Liquido',
             false
         );
-        //Serviço da NFS-e
+        
+        //Valor total de cada uma das retenções federais
+        $Ret = self::$dom->createElement('Ret');
+        self::$dom->addChild(
+            $Ret,
+            'vRetIR',
+            $rps->total->vRetIR,
+            false,
+            '',
+            false
+        );
+        self::$dom->addChild(
+            $Ret,
+            'vRetPISPASEP',
+            $rps->total->vRetPISPASEP,
+            false,
+            '',
+            false
+        );
+        self::$dom->addChild(
+            $Ret,
+            'vRetCOFINS',
+            $rps->total->vRetCOFINS,
+            false,
+            '',
+            false
+        );
+        self::$dom->addChild(
+            $Ret,
+            'vRetCSLL',
+            $rps->total->vRetCSLL,
+            false,
+            '',
+            false
+        );
+        self::$dom->addChild(
+            $Ret,
+            'vRetINSS',
+            $rps->total->vRetINSS,
+            false,
+            '',
+            false
+        );
+        self::$dom->appChild($total, $Ret, 'Adicionando tag Ret em total');
+        
+        //Valores Totais ISSQN
         $ISS = self::$dom->createElement('ISS');
         self::$dom->addChild(
             $ISS,
