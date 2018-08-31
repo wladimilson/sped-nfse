@@ -185,6 +185,22 @@ class RenderRPS
             'Inscrição Municipal',
             false
         );
+        self::$dom->addChild(
+            $prestador,
+            'xEmail',
+            $rps->prest->xEmail,
+            false,
+            'Email',
+            false
+        );
+        self::$dom->addChild(
+            $prestador,
+            'xSite',
+            $rps->prest->xSite,
+            false,
+            'Site',
+            false
+        );
         
         $endereco = self::$dom->createElement('end');
         self::$dom->addChild(
@@ -271,6 +287,30 @@ class RenderRPS
         self::$dom->appChild($prestador, $endereco, 'Adicionando tag Endereco do Prestador');
         //Fim endereço
         
+        self::$dom->addChild(
+            $prestador,
+            'fone',
+            $rps->prest->fone,
+            false,
+            'Telefone',
+            false
+        );
+        self::$dom->addChild(
+            $prestador,
+            'fone2',
+            $rps->prest->fone2,
+            false,
+            'Telefone Alternativo',
+            false
+        );
+        self::$dom->addChild(
+            $prestador,
+            'IE',
+            $rps->prest->IE,
+            false,
+            'Inscrição Estadual',
+            false
+        );
         self::$dom->addChild(
             $prestador,
             'regimeTrib',
@@ -795,6 +835,14 @@ class RenderRPS
             'Valor Total Liquido',
             false
         );
+        self::$dom->addChild(
+            $total,
+            'totalAproxTrib',
+            $rps->total->totalAproxTrib,
+            true,
+            'Valor Total aproximado dos tributos',
+            false
+        );
         
         //Valor total de cada uma das retenções federais
         $Ret = self::$dom->createElement('Ret');
@@ -839,6 +887,15 @@ class RenderRPS
             false
         );
         self::$dom->appChild($total, $Ret, 'Adicionando tag Ret em total');
+        
+        self::$dom->addChild(
+            $total,
+            'vtLiqFaturas',
+            $rps->total->vtLiqFaturas,
+            false,
+            'Valor Total Liquido das faturas',
+            false
+        );
         
         //Valores Totais ISSQN
         $ISS = self::$dom->createElement('ISS');
