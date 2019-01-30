@@ -2,12 +2,18 @@
 
 ## Outros projetos foram iniciados ou implementados, de forma separada para cada modelo !!
 
-> [sped-nfse-amtec](https://github.com/nfephp-org/sped-nfse-amtec)
-> [sped-nfse-dsf](https://github.com/nfephp-org/sped-nfse-dsf)
-> [sped-nfse-nacional](https://github.com/nfephp-org/sped-nfse-nacional)
-> [sped-nfse-ipm](https://github.com/nfephp-org/sped-nfse-ipm)
-> [sped-nfse-etransparencia](https://github.com/nfephp-org/sped-nfse-etransparencia)
-> [sped-nfse-sigcorp](https://github.com/nfephp-org/sped-nfse-sigcorp)
+> ### [sped-nfse-amtec](https://github.com/nfephp-org/sped-nfse-amtec)
+
+> ### [sped-nfse-dsf](https://github.com/nfephp-org/sped-nfse-dsf)
+
+> ### [sped-nfse-nacional](https://github.com/nfephp-org/sped-nfse-nacional)
+
+> ### [sped-nfse-ipm](https://github.com/nfephp-org/sped-nfse-ipm)
+
+> ### [sped-nfse-etransparencia](https://github.com/nfephp-org/sped-nfse-etransparencia)
+
+> ### [sped-nfse-sigcorp](https://github.com/nfephp-org/sped-nfse-sigcorp)
+
 
 
 [![Join the chat at https://gitter.im/nfephp-org/sped-nfse](https://badges.gitter.im/nfephp-org/sped-nfse.svg)](https://gitter.im/nfephp-org/sped-nfse?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
