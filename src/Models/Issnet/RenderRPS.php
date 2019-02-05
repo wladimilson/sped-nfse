@@ -399,6 +399,14 @@ class RenderRPS
             );
         }
         self::$dom->appChild($identificacaoTomador, $cpfCnpjTomador, 'Adicionando tag CpfCnpj em IdentificacaTomador');
+        self::$dom->addChild(
+            $identificacaoTomador,
+            'tc:InscricaoMunicipal',
+            $rps->infTomador['im'],
+            true,
+            'InscricaoMunicipal',
+            false
+        );
         self::$dom->appChild($tomador, $identificacaoTomador, 'Adicionando tag IdentificacaoTomador em Tomador');
         self::$dom->addChild(
             $tomador,
