@@ -1,6 +1,6 @@
 <?php
 
-namespace NFePHP\NFSe\Counties\M151402;
+namespace NFePHP\NFSe\Counties\M1501402;
 
 /**
  * Classe para a comunicação com os webservices da
