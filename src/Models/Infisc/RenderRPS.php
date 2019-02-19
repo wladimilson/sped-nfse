@@ -1,4 +1,5 @@
 <?php
+
 namespace NFePHP\NFSe\Models\Infisc;
 
 /**
@@ -14,6 +15,7 @@ namespace NFePHP\NFSe\Models\Infisc;
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
  * @link      http://github.com/nfephp-org/sped-nfse for the canonical source repository
  */
+
 use NFePHP\Common\DOMImproved as Dom;
 use NFePHP\NFSe\Models\Infisc\Rps;
 use NFePHP\Common\Certificate;
@@ -159,7 +161,7 @@ class RenderRPS
             true
         );
         self::$dom->appChild($infRPS, $identificacaoRps, 'Adicionando tag IdentificacaoRPS');
-        
+
         $prestador = self::$dom->createElement('prest');
         self::$dom->addChild(
             $prestador,
@@ -283,7 +285,7 @@ class RenderRPS
             'País',
             false
         );
-        
+
         self::$dom->appChild($prestador, $endereco, 'Adicionando tag Endereco do Prestador');
         //Fim endereço
         
@@ -320,7 +322,7 @@ class RenderRPS
             false
         );
         self::$dom->appChild($infRPS, $prestador, 'Adicionando tag Prestador em infRPS');
-                       
+
         $tomador = self::$dom->createElement('TomS');
         if (!empty($rps->TomS->CNPJ)) {
             self::$dom->addChild(
@@ -349,7 +351,7 @@ class RenderRPS
             'Razao Social',
             false
         );
-        
+
         $ender = self::$dom->createElement('ender');
         self::$dom->addChild(
             $ender,
@@ -431,11 +433,11 @@ class RenderRPS
             'País',
             false
         );
-        
+
         self::$dom->appChild($tomador, $ender, 'Adicionando tag Endereco do Prestador');
         //Fim endereço tomador
         self::$dom->appChild($infRPS, $tomador, 'Adicionando tag Tomador em infRPS');
-        
+
         //Transportadora
         if (isset($rps->transportadora)) {
             $transportadora = self::$dom->createElement('transportadora');
@@ -529,10 +531,12 @@ class RenderRPS
             );
             self::$dom->appChild($infRPS, $transportadora, 'Adicionando tag Transportadora em infRPS');
         }
-        
+
         //Detalhamento dos serviços
         $rps->totalvISS = 0;
         $rps->totalvBCISS = 0;
+        $rps->totalvSTISS = 0;
+        $rps->totalvBCSTISS = 0;
         foreach ($rps->det as $d) {
             $det = self::$dom->createElement('det');
             self::$dom->addChild(
@@ -543,7 +547,7 @@ class RenderRPS
                 'Número do Item',
                 false
             );
-                    
+
             //Serviço da NFS-e
             $serv = self::$dom->createElement('serv');
             self::$dom->addChild(
@@ -727,7 +731,7 @@ class RenderRPS
             self::$dom->addChild(
                 $serv,
                 'vRetCOFINS',
-                $rps->serv[$d->nItem]->vRetCOFINS,
+                $rps->serv[$d->nItem]->pRetCOFINS,
                 false,
                 '',
                 false
@@ -788,12 +792,54 @@ class RenderRPS
                 '',
                 false
             );
-            
-            self::$dom->appChild($det, $serv, 'Adicionando tag Serviço');
-            self::$dom->appChild($infRPS, $det, 'Adicionando tag det em infRPS');
+
+            self::$dom->appChild($det, $serv, 'Adicionando tag Endereco do Prestador');
+
+            //ISSST
+            if (isset($rps->ISSST[$d->nItem])) {
+                $ISSST = self::$dom->createElement('ISSST');
+                self::$dom->addChild(
+                    $ISSST,
+                    'vRedBCST',
+                    $rps->ISSST[$d->nItem]->vRedBCST,
+                    false,
+                    'Valor da redução da base de cálculo do ISSQN retido',
+                    false
+                );
+                self::$dom->addChild(
+                    $ISSST,
+                    'vBCST',
+                    $rps->ISSST[$d->nItem]->vBCST,
+                    true,
+                    'Valor da base de cálculo do ISSQN retido',
+                    false
+                );
+                $rps->totalvBCSTISS += $rps->ISSST[$d->nItem]->vBCST;
+                self::$dom->addChild(
+                    $ISSST,
+                    'pISSST',
+                    $rps->ISSST[$d->nItem]->pISSST,
+                    true,
+                    'Alíquota do ISSQN retido do item de serviço',
+                    false
+                );
+                self::$dom->addChild(
+                    $ISSST,
+                    'vISSST',
+                    $rps->ISSST[$d->nItem]->vISSST,
+                    true,
+                    'Valor do ISSQN retido do item de serviço',
+                    false
+                );
+                $rps->totalvSTISS += $rps->ISSST[$d->nItem]->vISSST;
+
+                self::$dom->appChild($det, $ISSST, 'Adicionando tag ISSQN retido em um item de serviço da NFS-e');
+            }
+            //Serviço da NFS-e
+            self::$dom->appChild($infRPS, $det, 'Adicionando tag Transportadora em infRPS');
         }
-        
-         //Totais
+
+        //Totais
         $total = self::$dom->createElement('total');
         self::$dom->addChild(
             $total,
@@ -835,84 +881,38 @@ class RenderRPS
             'Valor Total Liquido',
             false
         );
-        self::$dom->addChild(
-            $total,
-            'totalAproxTrib',
-            $rps->total->totalAproxTrib,
-            true,
-            'Valor Total aproximado dos tributos',
-            false
-        );
-        
-        //Valor total de cada uma das retenções federais
-        $Ret = self::$dom->createElement('Ret');
-        self::$dom->addChild(
-            $Ret,
-            'vRetIR',
-            $rps->total->vRetIR,
-            false,
-            '',
-            false
-        );
-        self::$dom->addChild(
-            $Ret,
-            'vRetPISPASEP',
-            $rps->total->vRetPISPASEP,
-            false,
-            '',
-            false
-        );
-        self::$dom->addChild(
-            $Ret,
-            'vRetCOFINS',
-            $rps->total->vRetCOFINS,
-            false,
-            '',
-            false
-        );
-        self::$dom->addChild(
-            $Ret,
-            'vRetCSLL',
-            $rps->total->vRetCSLL,
-            false,
-            '',
-            false
-        );
-        self::$dom->addChild(
-            $Ret,
-            'vRetINSS',
-            $rps->total->vRetINSS,
-            false,
-            '',
-            false
-        );
-        self::$dom->appChild($total, $Ret, 'Adicionando tag Ret em total');
-        
-        self::$dom->addChild(
-            $total,
-            'vtLiqFaturas',
-            $rps->total->vtLiqFaturas,
-            false,
-            'Valor Total Liquido das faturas',
-            false
-        );
-        
-        //Valores Totais ISSQN
+        //Serviço da NFS-e
         $ISS = self::$dom->createElement('ISS');
         self::$dom->addChild(
             $ISS,
             'vBCISS',
-            number_format($rps->totalvBCISS, 2, '.', ''),
-            true,
+            number_format($rps->totalvBCISS, 2),
+            false,
             'Valor total da base cálculo ISSQN',
             false
         );
         self::$dom->addChild(
             $ISS,
             'vISS',
-            number_format($rps->totalvISS, 2, '.', ''),
-            true,
+            number_format($rps->totalvISS, 2),
+            false,
             'Valor total ISS',
+            false
+        );
+        self::$dom->addChild(
+            $ISS,
+            'vBCSTISS',
+            number_format($rps->totalvBCSTISS, 2),
+            false,
+            'Valor total da base cálculo ISSQN ST',
+            false
+        );
+        self::$dom->addChild(
+            $ISS,
+            'vSTISS',
+            number_format($rps->totalvSTISS, 2),
+            false,
+            'Valor total ISS ST ',
             false
         );
         
@@ -978,7 +978,8 @@ class RenderRPS
                 false
             );
         }
-                
+
+
         self::$dom->appChild($root, $infRPS, 'Adicionando tag infRPS em RPS');
         self::$dom->appendChild($root);
         $xml = str_replace('<?xml version="1.0" encoding="utf-8"?>', '', self::$dom->saveXML());
