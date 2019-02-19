@@ -33,4 +33,5 @@ class Rps extends RpsBase
     public $serv = [];
     public $total;
     public $ISS;
+    public $ISSST;
 }
