@@ -1,6 +1,6 @@
 <?php
 
-namespace NFePHP\NFSe\Counties\M151402;
+namespace NFePHP\NFSe\Counties\M1501402;
 
 /**
  * Classe a construção do xml da NFSe para a
@@ -21,5 +21,5 @@ use NFePHP\NFSe\Models\Dsfnet\Rps as RpsDsfnet;
 
 class Rps extends RpsDsfnet
 {
-    
+
 }
