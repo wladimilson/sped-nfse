@@ -59,8 +59,6 @@ class Tools extends ToolsBase
      */
     protected function sendRequest($url, $message)
     {
-        return $message;
-        /*
         $url = $this->url[$this->config->tpAmb];
         if (!is_object($this->soap)) {
             $this->soap = new \NFePHP\NFSe\Common\SoapCurl($this->certificate);
@@ -69,7 +67,7 @@ class Tools extends ToolsBase
         //do xml, terá de haver uma transformação, porém no caso do SoapNative isso
         //não é necessário, pois o próprio SoapClient faz essas transformações,
         //baseado no WSDL.
-        if (is_a($this->soap, 'NFePHP\Common\Soap\SoapCurl') && $this->withcdata) {
+        if (is_a($this->soap, 'NFePHP\Common\Soap\SoapCurl')) {
             $messageText = $this->stringTransform($message);
             $request = "<$this->method soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">"
                 . "<mensagemXml xsi:type=\"xsd:string\">"
@@ -87,38 +85,11 @@ class Tools extends ToolsBase
             $this->method,
             $action,
             $this->soapversion,
-            $params,
-            $this->namespaces[$this->soapversion]
+            [],
+            $this->namespaces[$this->soapversion],
+            $request,
+            null
         );
-
-        */
-
-        /*
-        $request = "<dsf:$this->method>";
-        $request .= "<mensagemXML>$body</mensagemXML>";
-        $request .= "</dsf:$this->method>";
-        if ($this->withcdata === true) {
-            $param = ['soapenv:encodingStyle', 'http://schemas.xmlsoap.org/soap/encoding/'];
-            $request = $this->replaceNodeWithCdata($request, 'mensagemXML', $body, $param);
-        }
-        $envelope = "<?xml version=\"1.0\" encoding=\"utf-8\"?><soapenv:Envelope "
-                . "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                . "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
-                . "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
-                . "xmlns:dsf=\"$this->xmlns\">"
-                . "<soapenv:Body>"
-                . $request
-                . "</soapenv:Body>"
-                . "</soapenv:Envelope>";
-
-        $messageSize = strlen($envelope);
-        $parametros = array(
-            'Content-Type: application/soap+xml;charset=utf-8',
-            'SOAPAction: "'.$this->method.'"',
-            "Content-length: $messageSize");
-
-        return $envelope;
-         */
     }
 
     /**
