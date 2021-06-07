@@ -13,6 +13,7 @@ class NFSeTestCase extends TestCase
 
     public function __construct()
     {
+        parent::__construct();
         $this->fixturesPath = dirname(__FILE__) . '/fixtures/';
         $config = [
             "atualizacao" => "2016-08-03 18:01:21",

@@ -2,6 +2,9 @@
 .buildpath
 .project
 .idea
+.vscode
+.phpunit.result.cache
+.DS_Store
 nbproject
 local
 vendor
