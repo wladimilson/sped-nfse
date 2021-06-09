@@ -17,9 +17,15 @@
             "homepage": "https://github.com/nfephp-org/sped-nfse/graphs/contributors"
         }
     ],
+    "repositories":[
+        {
+            "type": "vcs",
+            "url": "https://github.com/wladimilson/sped-common.git"
+        }
+    ],
     "require": {
         "php": ">=7.0",
-        "nfephp-org/sped-common" : "^5.0"
+        "nfephp-org/sped-common" : "dev-master#5848b0c493c2d02353f81e6b56503eed097e8aac"
     },
     "require-dev": {
      "squizlabs/php_codesniffer": "^2.8",
