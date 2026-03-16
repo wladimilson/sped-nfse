@@ -35,7 +35,7 @@ class EnvioRPS extends Factory
      * @param int $remetenteTipoDoc
      * @param string $remetenteCNPJCPF
      * @param string $transacao
-     * @param NFePHP\NFSe\Models\Prodam\Rps|array|null $data
+     * @param Rps|array|null $data
      * @return string
      */
     public function render(

@@ -2,9 +2,17 @@
     "name": "nfephp-org/sped-nfse",
     "type": "library",
     "description": "API para geração e comunicação da NFSe com as Prefeituras.",
-    "keywords": ["nfse", "sped", "nfephp"],
+    "keywords": [
+        "nfse",
+        "sped",
+        "nfephp"
+    ],
     "homepage": "https://github.com/nfephp-org/sped-nfse",
-    "license": ["GPL-3.0+","LGPL-3.0+", "MIT"],
+    "license": [
+        "GPL-3.0+",
+        "LGPL-3.0+",
+        "MIT"
+    ],
     "authors": [
         {
             "name": "Roberto L. Machado",
@@ -19,17 +27,17 @@
     ],
     "require": {
         "php": ">=7.0",
-        "nfephp-org/sped-common" : "^5.0.51"
+        "nfephp-org/sped-common": "^5.1"
     },
     "require-dev": {
-     "squizlabs/php_codesniffer": "^2.8",
-        "phpunit/phpunit": "^9.5",
-        "scrutinizer/ocular": "^1.3"
+        "squizlabs/php_codesniffer": "^4.0",
+        "phpunit/phpunit": "^13.0",
+        "scrutinizer/ocular": "^1.9"
     },
     "autoload": {
         "psr-4": {
-          "NFePHP\\NFSe\\": "src/"
-        } 
+            "NFePHP\\NFSe\\": "src/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
