@@ -4,6 +4,7 @@ namespace NFePHP\NFSe\Tests;
 
 use PHPUnit\Framework\TestCase;
 
+// Testes extensos precisam ser criados
 class NFSeTestCase extends TestCase
 {
     public $fixturesPath = '';
@@ -11,9 +12,9 @@ class NFSeTestCase extends TestCase
     public $contentpfx = '';
     public $passwordpfx = '';
 
-    public function __construct()
+    public function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $this->fixturesPath = dirname(__FILE__) . '/fixtures/';
         $config = [
             "atualizacao" => "2016-08-03 18:01:21",

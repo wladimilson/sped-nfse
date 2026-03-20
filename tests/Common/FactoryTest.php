@@ -10,9 +10,9 @@ class FactoryTest  extends NFSeTestCase
 {
     public $factory;
     
-    public function __construct()
+    public function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $this->factory = new Factory(Certificate::readPfx($this->contentpfx, $this->passwordpfx));
     }
     

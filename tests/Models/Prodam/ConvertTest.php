@@ -11,9 +11,9 @@ class ConvertTest extends NFSeTestCase
 {
     public $convert;
     
-    public function __construct()
+    public function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $nfse = new NFSe(
             $this->configJson,
             Certificate::readPfx($this->contentpfx, $this->passwordpfx)

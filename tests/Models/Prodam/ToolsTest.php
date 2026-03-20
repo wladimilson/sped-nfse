@@ -11,13 +11,14 @@ class ToolsTest extends NFSeTestCase
     public $nfse;
     public $dummySoap;
     
-    public function __construct()
+    public function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $certificate = Certificate::readPfx($this->contentpfx, $this->passwordpfx);
         $this->nfse = new NFSe($this->configJson, $certificate);
+        /** @var \NFePHP\Common\Soap\SoapCurl */
         $this->dummySoap = $this->getMockBuilder('\NFePHP\Common\Soap\SoapCurl')
-            ->setMethods(['send'])    
+            ->onlyMethods(['send'])  
             ->getMock();
         $this->dummySoap->disableCertValidation(true);
     }
