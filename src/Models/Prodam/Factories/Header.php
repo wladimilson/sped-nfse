@@ -29,8 +29,8 @@ class Header extends HeaderBase
      * @param string $cnpj
      * @param string $cpf
      * @param string $im
-     * @param date $dtIni
-     * @param date $dtFim
+     * @param string $dtIni
+     * @param string $dtFim
      * @param int $pagina
      * @param int $qtdRPS
      * @param float $valorTotalServicos

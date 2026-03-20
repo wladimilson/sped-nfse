@@ -10,7 +10,7 @@ use DOMException;
 /**
  * @property DOMImproved $dom
  * @property array $errors
- * @property DOMElement $this->chaveRPS
+ * @property DOMElement $chaveRPS
  * @method equilizeParameters($std, $possible)
  */
 trait TraitTagChaveRPS

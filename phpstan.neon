@@ -4,5 +4,67 @@ parameters:
     phpVersion: 80000
     paths:
         - src
+    excludePaths:
+        - src/Counties/M1302603/*
+        - src/Counties/M2111300/*
+        - src/Counties/M3106200/*
+        - src/Counties/M3170206/*
+        - src/Counties/M3502507/*
+        - src/Counties/M3524402/*
+        - src/Counties/M3527207/*
+        - src/Counties/M3552205/*
+        - src/Counties/M4115200/*
+        - src/Counties/M4306106/*
+        - src/Counties/M4316907/*
+        - src/Counties/M5003702/*
+        - src/Counties/M5007208/*
+        - src/Counties/M5103403/*
+        - src/Counties/M5106232/*
+        - src/Counties/M5201108/*
+        - src/Counties/M1501402/*
+        - src/Counties/M2211001/*
+        - src/Counties/M3139607/*
+        - src/Counties/M3304557/*
+        - src/Counties/M3509502/*
+        - src/Counties/M3524709/*
+        - src/Counties/M3530607/*
+        - src/Counties/M3551009/*
+        - src/Counties/M4104808/*
+        - src/Counties/M4216602/*
+        - src/Counties/M4313409/*
+        - src/Counties/M5002209/*
+        - src/Counties/M5005707/*
+        - src/Counties/M5007901/*
+        - src/Counties/M5105101/*
+        - src/Counties/M5107925/*
+        - src/Counties/M5201405/*
+        - src/Counties/M1702109/*
+        - src/Counties/M2927408/*
+        - src/Counties/M3169307/*
+        - src/Counties/M3502101/*
+        - src/Counties/M3522307/*
+        - src/Counties/M3526902/*
+        - src/Counties/M3541000/*
+        - src/Counties/M3551504/*
+        - src/Counties/M4106902/*
+        - src/Counties/M4305108/*
+        - src/Counties/M4314902/*
+        - src/Counties/M5002704/*
+        - src/Counties/M5006002/*
+        - src/Counties/M5100250/*
+        - src/Counties/M5105903/*
+        - src/Counties/M5108402/*
+        - src/Counties/M5208707/*
+        - src/Models/Abaco/*
+        - src/Models/Abrasf/*
+        - src/Models/BHISS/*
+        - src/Models/Betha/*
+        - src/Models/Dsfnet/*
+        - src/Models/ETransparencia/*
+        - src/Models/Ginfes/*
+        - src/Models/Goiania/*
+        - src/Models/Infisc/*
+        - src/Models/Issnet/*
+        - src/Models/Smartpd/*
     level: 4
     inferPrivatePropertyTypeFromConstructor: true

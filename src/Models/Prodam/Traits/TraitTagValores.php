@@ -8,7 +8,8 @@ use DOMElement;
 
 /**
  * @property DOMImproved $dom
- * @property DOMElement $valures
+ * @property DOMElement $valores
+ * @property DOMElement $gReeRepRes
  * @method equilizeParameters($std, $possible)
  * @method conditionalNumberFormatting($value, $decimal = 2)
  */
@@ -132,7 +133,7 @@ trait TraitTagValores
             $identificador . "Valor monetário (total ou parcial, conforme documento informado) utilizado para não inclusão na base de cálculo do ISS e do IBS e da CBS da NFS-e que está sendo emitida (R$)"
         );
 
-        $this->gReeRepRes->addappendChild($documentos);
+        $this->gReeRepRes->appendChild($documentos);
 
         if (!empty($this->valores)) {
             $node = $this->valores->getElementsByTagName("trib")->item(0);

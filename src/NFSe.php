@@ -28,7 +28,7 @@ class NFSe
     /**
      * Construtor da classe
      * @param string $config Path to file or string Json
-     * @param NFePHP\Common\Certificate $certificate
+     * @param Certificate $certificate
      */
     public function __construct($config, Certificate $certificate)
     {

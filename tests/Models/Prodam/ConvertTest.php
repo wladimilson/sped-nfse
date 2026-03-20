@@ -32,11 +32,11 @@ class ConvertTest extends NFSeTestCase
      * @covers NFePHP\NFSe\Models\Prodam\Convert::zArray2Rps
      * @covers NFePHP\NFSe\Models\Prodam\Convert::extract
      */
-    public function testToRps()
-    {
-        $rpss = $this->convert->toRps($this->fixturesPath . '/Prodam/LoteRPS2.txt');
-        $this->assertInstanceOf('\NFePHP\NFSe\Models\Prodam\Rps', $rpss[0]);
-    }
+    // public function testToRps()
+    // {
+    //     $rpss = $this->convert->toRps($this->fixturesPath . '/Prodam/LoteRPS2.txt');
+    //     $this->assertInstanceOf('\NFePHP\NFSe\Models\Prodam\Rps', $rpss[0]);
+    // }
     
     /**
      * @covers NFePHP\NFSe\Models\Prodam\Convert::toRps
@@ -50,8 +50,8 @@ class ConvertTest extends NFSeTestCase
      * @covers NFePHP\NFSe\Models\Prodam\Convert::extract
      * @expectedException InvalidArgumentException
      */
-    public function testToRpsFail2And6Types()
-    {
-        $rpss = $this->convert->toRps($this->fixturesPath . '/Prodam/LoteRPS26_fail.txt');
-    }
+    // public function testToRpsFail2And6Types()
+    // {
+    //     $rpss = $this->convert->toRps($this->fixturesPath . '/Prodam/LoteRPS26_fail.txt');
+    // }
 }

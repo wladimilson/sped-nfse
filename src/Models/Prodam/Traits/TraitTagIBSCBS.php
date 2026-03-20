@@ -10,7 +10,7 @@ use NFePHP\Common\Strings;
 
 /**
  * @property Dom $dom
- * @property DOMElement $this->IBSCBS
+ * @property DOMElement $IBSCBS
  * @method equilizeParameters($std, $possible)
  */
 trait TraitTagIBSCBS
@@ -47,28 +47,28 @@ trait TraitTagIBSCBS
             true,
             $identificador . 'Indica operação de uso ou consumo pessoal. (0-Não ou 1-Sim)'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->IBSCBS,
             'cIndOp',
             Strings::onlyNumbers($std->cIndOp),
             true,
             $identificador . 'Código indicador da operação de fornecimento, conforme tabela "código indicador de operação"'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->IBSCBS,
             'tpOper',
             Strings::onlyNumbers($std->tpOper),
             false,
             $identificador . 'Tipo de Operação com Entes Governamentais ou outros serviços sobre bens imóveis'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->IBSCBS,
             'tpEnteGov',
             Strings::onlyNumbers($std->tpEnteGov),
             false,
             $identificador . 'Tipo do ente da compra governamental'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->IBSCBS,
             'indDest',
             Strings::onlyNumbers($std->indDest),
@@ -96,7 +96,7 @@ trait TraitTagIBSCBS
         }
 
         foreach ($std->refNFSe as $refNFSe) {
-            self::$dom->addChild(
+            $this->dom->addChild(
                 $gRefNFSe,
                 'refNFSe',
                 $refNFSe,
@@ -130,7 +130,7 @@ trait TraitTagIBSCBS
         $gRefNFSe = $this->dom->createElement('gRefNFSe');
         if (is_array($std->refNFSe)) {
             foreach ($std->refNFSe as $refNFSe) {
-                self::$dom->addChild(
+                $this->dom->addChild(
                     $gRefNFSe,
                     'refNFSe',
                     $refNFSe,

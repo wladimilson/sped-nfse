@@ -2,6 +2,8 @@
 
 namespace NFePHP\NFSe\Models\Prodam\Factories;
 
+use InvalidArgumentException;
+
 /**
  * Classe para a construção do XML relativo ao serviço de
  * Pedido de Cancelamento de NFSe dos webservices da
@@ -27,7 +29,7 @@ class CancelamentoNFSe extends Factory
      * @param string $remetenteCNPJCPF
      * @param string $transacao '', 'true' ou 'false' como string
      * @param string $prestadorIM
-     * @param string $numeroNFSe
+     * @param string|array $numeroNFSe
      * @return string
      */
     public function render(
@@ -43,7 +45,7 @@ class CancelamentoNFSe extends Factory
         $content .= Header::render($versao, $remetenteTipoDoc, $remetenteCNPJCPF, $transacao);
         if (is_array($numeroNFSe)) {
             if (count($numeroNFSe) > 50) {
-                throw InvalidArgumentException("No máximo pode ser solicitado o cancelamento de 50 NFSe por vez.");
+                throw new InvalidArgumentException("No máximo pode ser solicitado o cancelamento de 50 NFSe por vez.");
             }
             foreach ($numeroNFSe as $num) {
                 $content .= $this->detalhe($prestadorIM, $num);

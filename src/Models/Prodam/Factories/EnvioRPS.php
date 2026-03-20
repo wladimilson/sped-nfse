@@ -85,12 +85,13 @@ class EnvioRPS extends Factory
 
     /**
      * Processa quando temos apenas um RPS
-     * @param NFePHP\NFSe\Models\Prodam\Rps $data
+     * @param Rps $data
      * @return string
      */
-    private function individual(Rps $data)
+    private function individual(Rps $data): string
     {
-        return RenderRPS::toXml($data, $this->certificate, $this->algorithm);
+        $renderRPS = new RenderRPS($this->certificate, $this->algorithm);
+        return $renderRPS->getXml($data);
     }
 
     /**
@@ -98,12 +99,13 @@ class EnvioRPS extends Factory
      * @param array $data
      * @return string
      */
-    private function lote(array $data)
+    private function lote(array $data): string
     {
+        $renderRPS = new RenderRPS($this->certificate, $this->algorithm);
         $xmlRPS = '';
         $this->totalizeRps($data);
         foreach ($data as $rps) {
-            $xmlRPS .= RenderRPS::toXml($data, $this->certificate, $this->algorithm);
+            $xmlRPS .= $renderRPS->getXml($rps);
         }
         return $xmlRPS;
     }

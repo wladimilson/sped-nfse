@@ -17,7 +17,6 @@ namespace NFePHP\NFSe\Common;
 
 class Rps
 {
-
     protected function validData($matriz, $key)
     {
         return array_key_exists($key, $matriz);

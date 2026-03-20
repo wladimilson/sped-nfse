@@ -27,7 +27,7 @@ class Tools extends ToolsProdam
      */
     protected $url = [
         '2' => 'https://testenfe.prefeitura.sp.gov.br/ws/lotenfe.asmx',
-        '1' => 'https://nfe.prefeitura.sp.gov.br/ws/lotenfe.asmx'
+        '1' => 'https://nfews.prefeitura.sp.gov.br/lotenfe.asmx?WSDL' // Este novo endereço do serviço síncrono comporta ambos os layouts (versão 1 e 2)
     ];
     /**
      * County Namespace
@@ -51,7 +51,7 @@ class Tools extends ToolsProdam
     protected $withcdata = true;
     /**
      * Encription signature algorithm
-     * @var string
+     * @var int
      */
     protected $algorithm = OPENSSL_ALGO_SHA1;
     /**

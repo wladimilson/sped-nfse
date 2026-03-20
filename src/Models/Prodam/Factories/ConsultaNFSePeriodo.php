@@ -28,8 +28,8 @@ class ConsultaNFSePeriodo extends Factory
      * @param string $cnpj
      * @param string $cpf
      * @param string $im
-     * @param date $dtInicio
-     * @param date $dtFim
+     * @param string $dtInicio
+     * @param string $dtFim
      * @param int $pagina
      * @return string
      */

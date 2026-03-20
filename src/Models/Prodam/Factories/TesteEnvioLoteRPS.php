@@ -35,7 +35,7 @@ class TesteEnvioLoteRPS extends Factory
      * @param int $remetenteTipoDoc
      * @param string $remetenteCNPJCPF
      * @param string $transacao
-     * @param NFePHP\NFSe\Models\Prodam\Rps|array|null $data
+     * @param Rps|array|null $data
      * @return string
      */
     public function render(
@@ -78,10 +78,11 @@ class TesteEnvioLoteRPS extends Factory
      */
     private function lote(array $data)
     {
+        $renderRPS = new RenderRPS($this->certificate, $this->algorithm);
         $xmlRPS = '';
         $this->totalizeRps($data);
         foreach ($data as $rps) {
-            $xmlRPS .= RenderRPS::toXml($data, $this->certificate, $this->algorithm);
+            $xmlRPS .= $renderRPS->getXml($data);
         }
         return $xmlRPS;
     }
@@ -116,11 +117,12 @@ class TesteEnvioLoteRPS extends Factory
 
     /**
      * Processa quando temos apenas um RPS
-     * @param NFePHP\NFSe\Models\Prodam\Rps $data
+     * @param Rps $data
      * @return string
      */
-    private function individual(Rps $data)
-    {
-        return RenderRPS::toXml($data, $this->certificate, $this->algorithm);
-    }
+    // private function individual(Rps $data)
+    // {
+    //     $renderRPS = new RenderRPS($this->certificate, $this->algorithm);
+    //     return $renderRPS->getXml($data);
+    // }
 }

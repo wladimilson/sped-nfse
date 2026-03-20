@@ -46,11 +46,11 @@ use stdClass;
  * @property string $codigoServico
  * @property float $aliquotaServicos
  * @property bool $issRetido
- * @property array $cpfCnpjTomador
+ * @property array|null $cpfCnpjTomador
  * @property ?string $inscricaoMunicipalTomador
  * @property ?string $inscricaoEstadualTomador
  * @property ?string $razaoSocialTomador
- * @property ?stdClass|?array $enderecoTomador
+ * @property stdClass|array|null $enderecoTomador
  * @property ?string $emailTomador
  * @property ?array $cpfCnpjIntermediario
  * @property ?string $inscricaoMunicipalIntermediario
@@ -74,7 +74,7 @@ use stdClass;
  * @property bool $pagamentoParceladoAntecipado
  * @property ?string $NCM
  * @property string $NBS
- * @property ?stdClass|?array $atvEvento
+ * @property stdClass|array|null $atvEvento
  * @property ?string $cLocPrestacao
  * @property ?string $cPaisPrestacao
  * @property stdClass|array $ibsCbs
@@ -137,11 +137,11 @@ class Rps extends RpsBase
      */
     public function numero(int $numero)
     {
-        if (!is_numeric($numero) || $numero <= 0) {
+        if ($numero <= 0) {
             $msg = "[$numero] não é aceito. O numero do RPS deve ser numerico maior ou igual a 1";
             throw new InvalidArgumentException($msg);
         }
-        $this->numeroRPS = $numero;
+        $this->numeroRPS = (string) $numero;
     }
 
     /**

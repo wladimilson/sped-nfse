@@ -9,7 +9,7 @@ use NFePHP\Common\Strings;
 
 /**
  * @property Dom $dom
- * @property DOMElement $this->enderecoTomador
+ * @property DOMElement $enderecoTomador
  * @method equilizeParameters($std, $possible)
  */
 trait TraitTagEnderecoTomador
@@ -50,42 +50,42 @@ trait TraitTagEnderecoTomador
             false,
             $identificador . 'Endereço do tomador'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->enderecoTomador,
             'NumeroEndereco',
             $std->numeroEndereco,
             false,
             $identificador . 'Numero do Logradouro do tomador'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->enderecoTomador,
             'ComplementoEndereco',
             $std->complementoEndereco,
             false,
             $identificador . 'Complemento endereço do tomador'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->enderecoTomador,
             'Bairro',
             $std->Bairro,
             false,
             $identificador . 'Bairro endereço do tomador'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->enderecoTomador,
             'Cidade',
             Strings::onlyNumbers($std->cidade),
             true,
             $identificador . 'Cidade endereço do tomador'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->enderecoTomador,
             'UF',
             $std->UF,
             false,
             $identificador . 'UF endereço do tomador'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->enderecoTomador,
             'CEP',
             Strings::onlyNumbers($std->CEP),

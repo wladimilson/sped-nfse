@@ -17,9 +17,10 @@ namespace NFePHP\NFSe\Models\Prodam;
  */
 
 use InvalidArgumentException;
-use NFePHP\Common\Strings;
+use NFePHP\NFSe\Common\Convert as ConvertBase;
+use RuntimeException;
 
-class Convert
+class Convert extends ConvertBase
 {
     protected static $aRps = array();
     protected static $tipo = 0;
@@ -119,8 +120,9 @@ class Convert
     ];
 
     /**
+     * @deprecated  
      * Converte para Objetos RPS
-     * @param string $txt lote de RPS em TXT formatado ou path para o arquivo
+     * @param string|array $txt lote de RPS em TXT formatado ou path para o arquivo
      * @return array
      * @throws InvalidArgumentException
      */
@@ -130,35 +132,33 @@ class Convert
             throw new InvalidArgumentException('Algum dado deve ser passado para converter.');
         }
         $aRps = array();
-        if (is_file($txt)) {
-            //extrai cada linha do arquivo em um campo de matriz
-            $aDados = file($txt, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES | FILE_TEXT);
-        } elseif (is_array($txt)) {
-            //carrega a matriz
-            $aDados = $txt;
-        } else {
-            if (strlen($txt) > 0) {
-                //carrega a matriz com as linha do arquivo
-                $aDados = explode("\n", $txt);
-            } else {
-                return $aRps;
-            }
-        }
-        $total = count($aDados);
-        for ($x = 0; $x < $total; $x++) {
-            $aDados[$x] = str_replace("\r", '', $aDados[$x]);
-            $aDados[$x] = Strings::replaceSpecialsChars($aDados[$x]);
-            $tipo = substr($aDados[$x], 0, 1);
-            self::$contTipos[$tipo] += 1;
-        }
-        self::validTipos();
-        //o numero de notas criadas será a quantidade de tipo 2 ou 3 ou 6
-        self::$numRps = self::$contTipos['2'] + self::$contTipos['3'] + self::$contTipos['6'];
-        for ($x = 0; $x < self::$numRps; $x++) {
-            self::$aRps[] = new Rps();
-        }
-        self::zArray2Rps($aDados);
-        self::loadRPS();
+        // if (is_file($txt)) {
+        //     //extrai cada linha do arquivo em um campo de matriz
+        //     $aDados = file($txt, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        // } elseif (is_array($txt)) {
+        //     //carrega a matriz
+        //     $aDados = $txt;
+        // } else {
+        //     $aDados = explode("\n", $txt);
+        //     if (count($aDados) === 0) {
+        //         return $aRps;
+        //     }
+        // }
+        // $total = count($aDados);
+        // for ($x = 0; $x < $total; $x++) {
+        //     $aDados[$x] = str_replace("\r", '', $aDados[$x]);
+        //     $aDados[$x] = Strings::replaceSpecialsChars($aDados[$x]);
+        //     $tipo = substr($aDados[$x], 0, 1);
+        //     self::$contTipos[$tipo] += 1;
+        // }
+        // self::validTipos();
+        // //o numero de notas criadas será a quantidade de tipo 2 ou 3 ou 6
+        // self::$numRps = self::$contTipos['2'] + self::$contTipos['3'] + self::$contTipos['6'];
+        // for ($x = 0; $x < self::$numRps; $x++) {
+        //     self::$aRps[] = new Rps();
+        // }
+        // self::zArray2Rps($aDados);
+        // self::loadRPS();
         return self::$aRps;
     }
 
@@ -193,16 +193,16 @@ class Convert
      * Converte um lote de RPS em um array de txt em um ou mais RPS
      *
      * @param  array $aDados
-     * @return string
-     * @throws Exception\RuntimeException
+     * @return void
+     * @throws RuntimeException
      */
-    protected static function zArray2Rps($aDados = array())
+    protected static function zArray2Rps(array $aDados = array()): void
     {
         foreach ($aDados as $dado) {
             $metodo = 'f' . substr($dado, 0, 1) . 'Entity';
             if (!method_exists(__CLASS__, $metodo)) {
                 $msg = "O txt tem um metodo não definido!! $dado";
-                throw new Exception\RuntimeException($msg);
+                throw new RuntimeException($msg);
             }
             self::$metodo($dado);
         }
@@ -244,7 +244,7 @@ class Convert
             $rps->issRetido($fData[$x]['issRetido']);
             $rps->discriminacao($fData[$x]['discriminacao']);
             $func = 'loadTipo' . $tipo;
-            self::$func($rps, $fData[$x]);
+            $f5 = self::$func($rps, $fData[$x]);
             //verifica se possue intermediario tipo 5
             if (!empty($f5[$x])) {
                 $rps->intemediario(
@@ -259,6 +259,8 @@ class Convert
     }
 
     /**
+     * @deprecated No longer used
+     * 
      * Carrega a parte do RPS relativa apenas a
      * registro tipo 3 - CUPONS (versão 001 e 002 do layout)
      * @param Rps $rps
@@ -266,17 +268,19 @@ class Convert
      */
     protected static function loadTipo3(Rps &$rps, $fData)
     {
-        $rps->tomador(
-            '',
-            $fData['indTomador'],
-            $fData['cnpjcpfTomador'],
-            '',
-            '',
-            ''
-        );
+        // $rps->tomador(
+        //     '',
+        //     $fData['indTomador'],
+        //     $fData['cnpjcpfTomador'],
+        //     '',
+        //     '',
+        //     ''
+        // );
     }
 
     /**
+     * @deprecated No longer used
+     * 
      * Carrega a parte do RPS relativa apenas a
      * registro tipo 6 (versão 002 do layout)
      * @param Rps $rps
@@ -284,49 +288,51 @@ class Convert
      */
     protected static function loadTipo6(Rps &$rps, $fData)
     {
-        self::loadTipo2($rps, $fData);
-        //campos especificos que só existem no tipo 6
-        $rps->valorPIS($fData['pis']);
-        $rps->valorCOFINS($fData['cofins']);
-        $rps->valorIR($fData['ir']);
-        $rps->valorCSLL($fData['csll']);
-        $rps->valorINSS($fData['inss']);
-        $rps->codigoCEI($fData['cei']);
-        $rps->matriculaObra($fData['matriculaObra']);
-        $rps->municipioPrestacao($fData['cMunPrestacao']);
-        $rps->cargaTributaria(
-            $fData['cargaTribValor'],
-            $fData['cargaTribPerc'],
-            $fData['cargaTribFonte']
-        );
+        // self::loadTipo2($rps, $fData);
+        // //campos especificos que só existem no tipo 6
+        // $rps->valorPIS($fData['pis']);
+        // $rps->valorCOFINS($fData['cofins']);
+        // $rps->valorIR($fData['ir']);
+        // $rps->valorCSLL($fData['csll']);
+        // $rps->valorINSS($fData['inss']);
+        // $rps->codigoCEI($fData['cei']);
+        // $rps->matriculaObra($fData['matriculaObra']);
+        // $rps->municipioPrestacao($fData['cMunPrestacao']);
+        // $rps->cargaTributaria(
+        //     $fData['cargaTribValor'],
+        //     $fData['cargaTribPerc'],
+        //     $fData['cargaTribFonte']
+        // );
     }
 
     /**
+     * @deprecated No longer used
+     * 
      * Carrega a parte do RPS relativa apenas a
      * registro tipo 2 (versão 001 do layout)
      * @param Rps $rps
-     * @param type $fData
+     * @param array $fData
      */
     protected static function loadTipo2(Rps &$rps, $fData)
     {
-        $rps->tomador(
-            $fData['razaoTomador'],
-            $fData['indTomador'],
-            $fData['cnpjcpfTomador'],
-            $fData['ieTomador'],
-            $fData['imTomador'],
-            $fData['emailTomador']
-        );
-        $rps->tomadorEndereco(
-            $fData['tpEndTomador'],
-            $fData['logradouroTomador'],
-            $fData['numTomador'],
-            $fData['cplTomador'],
-            $fData['bairroTomador'],
-            $fData['cidadeTomador'],
-            $fData['ufTomador'],
-            $fData['cepTomador']
-        );
+        // $rps->tomador(
+        //     $fData['razaoTomador'],
+        //     $fData['indTomador'],
+        //     $fData['cnpjcpfTomador'],
+        //     $fData['ieTomador'],
+        //     $fData['imTomador'],
+        //     $fData['emailTomador']
+        // );
+        // $rps->tomadorEndereco(
+        //     $fData['tpEndTomador'],
+        //     $fData['logradouroTomador'],
+        //     $fData['numTomador'],
+        //     $fData['cplTomador'],
+        //     $fData['bairroTomador'],
+        //     $fData['cidadeTomador'],
+        //     $fData['ufTomador'],
+        //     $fData['cepTomador']
+        // );
     }
 
     /**

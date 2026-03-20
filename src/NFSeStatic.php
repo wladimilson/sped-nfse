@@ -17,7 +17,10 @@ namespace NFePHP\NFSe;
  */
 
 use NFePHP\Common\Certificate;
-use NFePHP\NFSe\Counties;
+use NFePHP\NFSe\Common\Convert;
+use NFePHP\NFSe\Common\Response;
+use NFePHP\NFSe\Common\Rps;
+use NFePHP\NFSe\Common\Tools;
 use RuntimeException;
 use stdClass;
 
@@ -25,8 +28,8 @@ class NFSeStatic
 {
     /**
      * Instancia a classe usada na conversão dos arquivos txt em RPS
-     * @param string $config
-     * @return \NFePHP\NFSe\Counties\class
+     * @param stdClass $config
+     * @return Convert
      */
     public static function convert(stdClass $config)
     {
@@ -38,8 +41,8 @@ class NFSeStatic
      *
      * @param string $className
      * @param stdClass $config
-     * @param NFePHP\Common\Certificate|null $certificate
-     * @return \NFePHP\NFSe\className
+     * @param Certificate|null $certificate
+     * @return Convert|Response|Rps|Tools
      * @throws RuntimeException
      */
     private static function classCheck($className, stdClass $config, $certificate = null)
@@ -68,7 +71,7 @@ class NFSeStatic
      * para um municipio em particular
      *
      * @param stdClass $config
-     * @return \NFePHP\NFSe\Counties\class
+     * @return Rps
      */
     public static function rps(stdClass $config)
     {
@@ -80,8 +83,8 @@ class NFSeStatic
      * para um municipio em particular
      *
      * @param stdClass $config
-     * @param NFePHP\Common\Certificate $certificate
-     * @return \NFePHP\NFSe\Counties\class
+     * @param Certificate $certificate
+     * @return Tools
      */
     public static function tools(stdClass $config, Certificate $certificate)
     {
@@ -91,7 +94,7 @@ class NFSeStatic
     /**
      * Instancia a classe que converte o xml de resposta em
      * uma stdClass
-     * @return \NFePHP\NFSe\Counties\class
+     * @return Response
      */
     public static function response(stdClass $config)
     {

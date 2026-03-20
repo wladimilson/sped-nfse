@@ -10,7 +10,8 @@ use NFePHP\Common\Strings;
 
 /**
  * @property Dom $dom
- * @property DOMElement $this->end
+ * @property DOMElement $end
+ * @property DOMElement $endExt
  * @method equilizeParameters($std, $possible)
  */
 trait TraitTagEnd
@@ -32,7 +33,7 @@ trait TraitTagEnd
         $std = $this->equilizeParameters($std, $possible);
         $identificador = 'Tag end -';
         $this->end = $this->dom->createElement('end');
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->end,
             'CEP',
             Strings::onlyNumbers($std->CEP),
@@ -46,21 +47,21 @@ trait TraitTagEnd
             true,
             $identificador . 'Logradouro'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->end,
             'nro',
             $std->nro,
             true,
             $identificador . 'Numero do Logradouro do tomador'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->end,
             'xCpl',
             $std->xCpl,
             false,
             $identificador . 'Complemento'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->end,
             'xBairro',
             $std->xBairro,
@@ -108,14 +109,14 @@ trait TraitTagEnd
                 $this->end->removeChild($node);
             }
 
-            self::$dom->addChild(
+            $this->dom->addChild(
                 $endNac,
                 'cMun',
                 Strings::onlyNumbers($std->xCpl),
                 false,
                 $identificador . 'Código do município'
             );
-            self::$dom->addChild(
+            $this->dom->addChild(
                 $endNac,
                 'CEP',
                 $CEP,

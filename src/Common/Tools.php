@@ -34,7 +34,7 @@ abstract class Tools
     protected $certificate;
     /**
      * Soap::class
-     * @var \NFePHP\Common\Soap\SoapInterface
+     * @var ?SoapInterface
      */
     protected $soap;
     /**

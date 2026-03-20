@@ -19,15 +19,16 @@ namespace NFePHP\NFSe\Models\Prodam;
 use NFePHP\Common\Soap\SoapCurl;
 use NFePHP\NFSe\Common\Tools as ToolsBase;
 use NFePHP\NFSe\Models\Prodam\Factories;
+use NFePHP\NFSe\Models\Prodam\Rps;
 
 class Tools extends ToolsBase
 {
     /**
      * Envio de apenas um RPS
-     * @param \NFePHP\NFSe\Models\Prodam\RPS $rps
+     * @param Rps $rps
      * @return string
      */
-    public function envioRPS(RPS $rps)
+    public function envioRPS(Rps $rps)
     {
         $this->method = 'EnvioRPS';
         $fact = new Factories\EnvioRPS($this->certificate);

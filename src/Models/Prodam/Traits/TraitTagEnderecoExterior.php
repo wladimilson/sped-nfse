@@ -8,7 +8,7 @@ use DOMElement;
 
 /**
  * @property Dom $dom
- * @property DOMElement $this->enderecoExterior
+ * @property DOMElement $enderecoExterior
  * @method equilizeParameters($std, $possible)
  */
 trait TraitTagEnderecoExterior
@@ -43,14 +43,14 @@ trait TraitTagEnderecoExterior
             true,
             $identificador . 'Código alfanumérico do Endereçamento Postal no exterior do prestador do serviço'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->enderecoExterior,
             'xCidade',
             $std->xCidade,
             true,
             $identificador . 'Nome da cidade no exterior do prestador do serviço'
         );
-        self::$dom->addChild(
+        $this->dom->addChild(
             $this->enderecoExterior,
             'xEstProvReg',
             $std->xEstProvReg,
