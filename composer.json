@@ -32,7 +32,8 @@
     "require-dev": {
         "squizlabs/php_codesniffer": "^4.0",
         "phpunit/phpunit": "^13.0",
-        "scrutinizer/ocular": "^1.9"
+        "scrutinizer/ocular": "^1.9",
+        "phpstan/phpstan": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -45,7 +46,8 @@
         }
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit",
+        "phpstan": "phpstan analyse -c phpstan.neon --memory-limit=2G"
     },
     "extra": {
         "branch-alias": {
