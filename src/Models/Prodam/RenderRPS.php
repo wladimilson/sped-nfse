@@ -18,9 +18,30 @@ namespace NFePHP\NFSe\Models\Prodam;
 
 use NFePHP\Common\Certificate;
 use NFePHP\Common\DOMImproved as Dom;
+use NFePHP\Common\Strings;
+use NFePHP\NFSe\Models\Prodam\Traits\TraitTagAtvEvento;
+use NFePHP\NFSe\Models\Prodam\Traits\TraitTagChaveRPS;
+use NFePHP\NFSe\Models\Prodam\Traits\TraitTagCPFCNPJNIF;
+use NFePHP\NFSe\Models\Prodam\Traits\TraitTagDest;
+use NFePHP\NFSe\Models\Prodam\Traits\TraitTagEnd;
+use NFePHP\NFSe\Models\Prodam\Traits\TraitTagEnderecoExterior;
+use NFePHP\NFSe\Models\Prodam\Traits\TraitTagEnderecoTomador;
+use NFePHP\NFSe\Models\Prodam\Traits\TraitTagIBSCBS;
+use NFePHP\NFSe\Models\Prodam\Traits\TraitTagValores;
+use stdClass;
 
 class RenderRPS
 {
+    use TraitTagAtvEvento;
+    use TraitTagChaveRPS;
+    use TraitTagCPFCNPJNIF;
+    use TraitTagDest;
+    use TraitTagEnd;
+    use TraitTagEnderecoExterior;
+    use TraitTagEnderecoTomador;
+    use TraitTagIBSCBS;
+    use TraitTagValores;
+
     protected static $dom;
     protected static $certificate;
     protected static $algorithm;
@@ -59,35 +80,11 @@ class RenderRPS
             self::signstr($rps),
             true,
             'Tag assinatura do RPS vazia',
-            true
         );
         //tag ChaveRPS
-        $chaveRps = self::$dom->createElement('ChaveRPS');
-        self::$dom->addChild(
-            $chaveRps,
-            'InscricaoPrestador',
-            $rps->prestadorIM,
-            true,
-            "IM do prestador",
-            true
-        );
-        self::$dom->addChild(
-            $chaveRps,
-            'SerieRPS',
-            $rps->serieRPS,
-            true,
-            'Serie do RPS',
-            false
-        );
-        self::$dom->addChild(
-            $chaveRps,
-            'NumeroRPS',
-            $rps->numeroRPS,
-            true,
-            "Numero do RPS",
-            true
-        );
+        $chaveRps = self::tagChaveRPS((object) $rps->chaveRPS);
         self::$dom->appChild($root, $chaveRps, 'Adicionando tag ChaveRPS');
+
         //outras tags
         self::$dom->addChild(
             $root,
@@ -95,23 +92,20 @@ class RenderRPS
             $rps->tipoRPS,
             true,
             'Tipo de RPS',
-            false
         );
         self::$dom->addChild(
             $root,
             'DataEmissao',
-            $rps->dtEmiRPS,
+            $rps->dataEmissao,
             true,
             'Data de emissão',
-            false
         );
         self::$dom->addChild(
             $root,
             'StatusRPS',
             $rps->statusRPS,
             true,
-            'Status do RPS',
-            false
+            'Status do RPS'
         );
         self::$dom->addChild(
             $root,
@@ -119,263 +113,322 @@ class RenderRPS
             $rps->tributacaoRPS,
             true,
             'Tributação do RPS',
-            false
-        );
-        self::$dom->addChild(
-            $root,
-            'ValorServicos',
-            $rps->valorServicosRPS,
-            true,
-            'Valor dos serviços',
-            false
         );
         self::$dom->addChild(
             $root,
             'ValorDeducoes',
-            $rps->valorDeducoesRPS,
+            $rps->valorDeducoes,
             true,
             'Valor das Deduções',
-            true
         );
         self::$dom->addChild(
             $root,
             'ValorPIS',
-            $rps->valorPISRPS,
-            false,
-            'Valor do PIS',
-            false
+            $rps->valorPIS,
+            true,
+            'Valor do PIS'
         );
         self::$dom->addChild(
             $root,
             'ValorCOFINS',
-            $rps->valorCOFINSRPS,
-            false,
-            'Valor do COFINS',
-            false
+            $rps->valorCOFINS,
+            true,
+            'Valor do COFINS'
         );
         self::$dom->addChild(
             $root,
             'ValorINSS',
-            $rps->valorINSSRPS,
-            false,
-            'Valor do INSS',
-            false
+            $rps->valorINSS,
+            true,
+            'Valor do INSS'
         );
         self::$dom->addChild(
             $root,
             'ValorIR',
-            $rps->valorIRRPS,
-            false,
+            $rps->valorIR,
+            true,
             'Valor do IR',
-            false
         );
         self::$dom->addChild(
             $root,
             'ValorCSLL',
-            $rps->valorCSLLRPS,
-            false,
-            'Valor do CSLL',
-            false
+            $rps->valorCSLL,
+            true,
+            'Valor do CSLL'
         );
         self::$dom->addChild(
             $root,
             'CodigoServico',
-            $rps->codigoServicoRPS,
+            $rps->codigoServico,
             true,
-            'Código do serviço',
-            false
+            'Código do serviço'
         );
         self::$dom->addChild(
             $root,
             'AliquotaServicos',
-            $rps->aliquotaServicosRPS,
+            $rps->aliquotaServicos,
             true,
-            'Aliquota do serviço',
-            false
+            'Aliquota do serviço'
         );
-        $issRet = 'false';
-        if ($rps->issRetidoRPS) {
-            $issRet = 'true';
-        }
         self::$dom->addChild(
             $root,
             'ISSRetido',
-            $issRet,
+            $rps->issRetido ? 'true' : 'false',
             true,
-            'ISS Retido',
-            false
+            'ISS Retido'
         );
         //tag CPFCNPJTomador
-        if ($rps->tomadorTipoDoc != '3') {
-            $tomador = self::$dom->createElement('CPFCNPJTomador');
-            if ($rps->tomadorTipoDoc == '2') {
-                self::$dom->addChild(
-                    $tomador,
-                    'CNPJ',
-                    $rps->tomadorCNPJCPF,
-                    true,
-                    "CNPJ do tomador",
-                    false
-                );
-            } elseif ($rps->tomadorTipoDoc == '1') {
-                self::$dom->addChild(
-                    $tomador,
-                    'CPF',
-                    $rps->tomadorCNPJCPF,
-                    true,
-                    "CPF do tomador",
-                    false
-                );
-            }
+        if ($rps->cpfCnpjTomador !== null || (is_array($rps->cpfCnpjTomador) && !empty($rps->cpfCnpjTomador))) {
+            $tomador = self::tagCPFCNPJNIF((object) $rps->cpfCnpjTomador, 'CPFCNPJTomador');
             self::$dom->appChild($root, $tomador, 'Adicionando tag CPFCNPJTomador');
         }
-        //outras tags
+        self::$dom->addChild(
+            $root,
+            'InscricaoMunicipalTomador',
+            $rps->inscricaoMunicipalTomador,
+            false,
+            'Inscrição Municipal do Tomador. ATENÇÃO: Este campo só deverá ser preenchido para tomadores estabelecidos no município de São Paulo (CCM)'
+        );
+        self::$dom->addChild(
+            $root,
+            'InscricaoEstadualTomador',
+            $rps->inscricaoEstadualTomador,
+            false,
+            'Inscrição estadual do tomador'
+        );
         self::$dom->addChild(
             $root,
             'RazaoSocialTomador',
-            $rps->tomadorRazao,
+            $rps->razaoSocialTomador,
             true,
-            'Razão Social do tomador',
-            false
+            'Razão Social do tomador'
         );
+
         //tag EnderecoTomador
-        $endtomador = self::$dom->createElement('EnderecoTomador');
-        self::$dom->addChild(
-            $endtomador,
-            'TipoLogradouro',
-            $rps->tomadorTipoLogradouro,
-            true,
-            'Tipo de logradouro do tomador',
-            false
-        );
-        self::$dom->addChild(
-            $endtomador,
-            'Logradouro',
-            $rps->tomadorLogradouro,
-            true,
-            'Logradouro do tomador',
-            false
-        );
-        self::$dom->addChild(
-            $endtomador,
-            'NumeroEndereco',
-            $rps->tomadorNumeroEndereco,
-            true,
-            'Numero do Logradouro do tomador',
-            false
-        );
-        self::$dom->addChild(
-            $endtomador,
-            'ComplementoEndereco',
-            $rps->tomadorComplementoEndereco,
-            true,
-            'Complemento endereço do tomador',
-            false
-        );
-        self::$dom->addChild(
-            $endtomador,
-            'Bairro',
-            $rps->tomadorBairro,
-            true,
-            'Bairro endereço do tomador',
-            false
-        );
-        self::$dom->addChild(
-            $endtomador,
-            'Cidade',
-            $rps->tomadorCodCidade,
-            true,
-            'Cidade endereço do tomador',
-            false
-        );
-        self::$dom->addChild(
-            $endtomador,
-            'UF',
-            $rps->tomadorSiglaUF,
-            true,
-            'UF endereço do tomador',
-            false
-        );
-        self::$dom->addChild(
-            $endtomador,
-            'CEP',
-            $rps->tomadorCEP,
-            true,
-            'CEP endereço do tomador',
-            false
-        );
-        self::$dom->appChild($root, $endtomador, 'Adicionando tag EnderecoTomador');
-        //outras tags
+        if ($rps->enderecoTomador !== null || (is_array($rps->enderecoTomador) && !empty($rps->enderecoTomador))) {
+            $endtomador = self::tagEnderecoTomador((object) $rps->enderecoTomador);
+            self::$dom->addChild(
+                $root,
+                'EnderecoTomador',
+                $endtomador,
+                false, // Os campos do endereço são obrigatórios apenas para tomadores pessoa jurídica (CNPJ informado)
+                'Endereço do tomador'
+            );
+        }
+        
         self::$dom->addChild(
             $root,
             'EmailTomador',
-            $rps->tomadorEmail,
+            $rps->emailTomador,
             false,
-            'Email do tomador',
-            false
+            'Email do tomador'
         );
         //tag intermediario
         //se existir incluir dados do intermediário
-        if ($rps->intermediarioCNPJCPF) {
-            $intermediario = self::$dom->createElement('CPFCNPJIntermediario');
-            self::$dom->addChild(
-                $intermediario,
-                'CNPJ',
-                $rps->intermediarioCNPJCPF,
-                true,
-                "CNPJ do intermediario",
-                false
-            );
+        if ($rps->cpfCnpjIntermediario !== null || (is_array($rps->cpfCnpjIntermediario) && !empty($rps->cpfCnpjIntermediario))) {
+            $intermediario = self::tagCPFCNPJNIF((object) $rps->cpfCnpjTomador, 'CPFCNPJIntermediario');
             self::$dom->appChild($root, $intermediario, 'Adicionando tag CPFCNPJIntermediario');
+
             self::$dom->addChild(
                 $root,
                 'InscricaoMunicipalIntermediario',
-                $rps->intermediarioIM,
+                $rps->inscricaoMunicipalIntermediario,
                 false,
                 'IM do intermediario',
-                false
+            );
+            self::$dom->addChild(
+                $root,
+                'ISSRetidoIntermediario',
+                $rps->issRetidoIntermediario ? 'true' : 'false',
+                false,
+                'Retenção do ISS pelo intermediário de serviço',
             );
             self::$dom->addChild(
                 $root,
                 'EmailIntermediario',
-                $rps->intermediarioEmail,
+                $rps->emailIntermediario,
                 false,
-                'email do intermediario',
-                false
+                'Email do intermediario',
             );
         }
         self::$dom->addChild(
             $root,
             'Discriminacao',
-            $rps->discriminacaoRPS,
+            Strings::replaceSpecialsChars(trim($rps->discriminacao)),
             true,
-            'Discriminação do serviço',
-            false
+            'Discriminação do serviço'
         );
-	 self::$dom->addChild(
+	    self::$dom->addChild(
             $root,
             'ValorCargaTributaria',
-            $rps->valorCargaTributariaRPS,
-            true,
-            'Valor da carga tributária total em R$.',
-            false
+            self::conditionalNumberFormatting($rps->valorCargaTributaria),
+            false,
+            'Valor da carga tributária total em R$.'
         );
         self::$dom->addChild(
             $root,
             'PercentualCargaTributaria',
-            $rps->percentualCargaTributariaRPS,
-            true,
-            'Valor percentual da carga tributária',
-            false
+            self::conditionalNumberFormatting($rps->percentualCargaTributaria, 4),
+            false,
+            'Valor percentual da carga tributária'
         );
         self::$dom->addChild(
             $root,
             'FonteCargaTributaria',
-            $rps->fonteCargaTributariaRPS,
-            true,
-            'Fonte de informação da carga tributária ',
-            false
+            substr(Strings::replaceSpecialsChars($rps->fonteCargaTributaria), 0, 10),
+            false,
+            'Fonte de informação da carga tributária'
         );
+
+        self::$dom->addChild(
+            $root,
+            'CodigoCEI',
+            $rps->codigoCEI,
+            false,
+            'Código do CEI - Cadastro específico do INSS'
+        );
+        self::$dom->addChild(
+            $root,
+            'MatriculaObra',
+            $rps->matriculaObra,
+            false,
+            'Código que representa a matrícula da obra no sistema de cadastro de obras'
+        );
+        self::$dom->addChild(
+            $root,
+            'MunicipioPrestacao',
+            $rps->municipioPrestacao,
+            false,
+            'Código da cidade do município da prestação do serviço'
+        );
+        self::$dom->addChild(
+            $root,
+            'NumeroEncapsulamento',
+            $rps->numeroEncapsulamento,
+            false,
+            'Código que representa o número do encapsulamento da obra'
+        );
+
+
+        self::$dom->addChild(
+            $root,
+            'ValorTotalRecebido',
+            self::conditionalNumberFormatting($rps->valorTotalRecebido),
+            true,
+            'Valor do total recebido'
+        );
+        if (isset($rps->valorInicialCobrado)){
+            self::$dom->addChild(
+                $root,
+                'ValorInicialCobrado',
+                self::conditionalNumberFormatting($rps->valorInicialCobrado),
+                true,
+                'Valor inicial cobrado pela prestação do serviço, antes de tributos, multa e juros'
+            );
+        } else {
+            self::$dom->addChild(
+                $root,
+                'ValorFinalCobrado',
+                self::conditionalNumberFormatting($rps->valorFinalCobrado),
+                true,
+                'Valor final cobrado pela prestação do serviço, incluindo todos os tributos'
+            );
+        }
+        self::$dom->addChild(
+            $root,
+            'ValorMulta',
+            self::conditionalNumberFormatting($rps->valorMulta),
+            false,
+            'Valor da multa'
+        );
+        self::$dom->addChild(
+            $root,
+            'ValorJuros',
+            self::conditionalNumberFormatting($rps->valorJuros),
+            false,
+            'Valor dos juros'
+        );
+        self::$dom->addChild(
+            $root,
+            'ValorIPI',
+            self::conditionalNumberFormatting($rps->valorIPI),
+            false,
+            'Valor de IPI'
+        );
+
+        self::$dom->addChild(
+            $root,
+            'ExigibilidadeSuspensa',
+            (int) $rps->exigibilidadeSuspensa,
+            false,
+            'Indica se é uma emissão com exigibilidade suspensa'
+        );
+        self::$dom->addChild(
+            $root,
+            'PagamentoParceladoAntecipado',
+            (int) $rps->pagamentoParceladoAntecipado,
+            false,
+            'Indica de nota fiscal de pagamento parcelado antecipado (realizado antes do fornecimento)'
+        );
+
+        self::$dom->addChild(
+            $root,
+            'NCM',
+            Strings::onlyNumbers($rps->NCM),
+            false,
+            'Número NCM (Nomenclatura Comum do Mercosul)'
+        );
+        self::$dom->addChild(
+            $root,
+            'NBS',
+            Strings::onlyNumbers($rps->NBS),
+            false,
+            'Número NBS (Nomenclatura Brasileira de Serviços)'
+        );
+
+        //tag atvEvento
+        if ($rps->atvEvento !== null || (is_array($rps->atvEvento) && !empty($rps->atvEvento))) {
+            $atvEvento = self::tagAtvEvento((object) $rps->atvEvento);
+            self::$dom->addChild(
+                $root,
+                'atvEvento',
+                $atvEvento,
+                false,
+                'Informações dos Tipos de evento'
+            );
+        }
+
+        // gpPrestacao (escolha entre cLocPrestacao e cPaisPrestacao)
+
+        if (!empty($rps->cPaisPrestacao)) {
+            self::$dom->addChild(
+                $root,
+                'cPaisPrestacao',
+                Strings::onlyNumbers($rps->cPaisPrestacao),
+                true,
+                'País de prestação do serviço'
+            );
+        } else {
+            self::$dom->addChild(
+                $root,
+                'cLocPrestacao',
+                Strings::onlyNumbers($rps->cLocPrestacao),
+                true,
+                'Cidade de prestação do serviço'
+            );
+        }
+        
+        if ($rps->ibsCbs !== null || (is_array($rps->ibsCbs) && !empty($rps->ibsCbs))) {
+        // Grupo de Informações do IBS e da CBS
+            $IBSCBS = self::tagIBSCBS((object) $rps->ibsCbs);
+            self::$dom->addChild(
+                $root,
+                'IBSCBS',
+                $IBSCBS,
+                true,
+                'Informações do IBS e da CBS'
+            );
+        }
         //finaliza
         self::$dom->appendChild($root);
         $xml = str_replace('<?xml version="1.0" encoding="utf-8"?>', '', self::$dom->saveXML());
@@ -392,32 +445,104 @@ class RenderRPS
         $content = str_pad($rps->prestadorIM, 8, '0', STR_PAD_LEFT);
         $content .= str_pad($rps->serieRPS, 5, ' ', STR_PAD_RIGHT);
         $content .= str_pad($rps->numeroRPS, 12, '0', STR_PAD_LEFT);
-        $content .= str_replace("-", "", $rps->dtEmiRPS);
+        $content .= str_replace("-", "", $rps->dataEmissao);
         $content .= $rps->tributacaoRPS;
         $content .= $rps->statusRPS;
-        $content .= ($rps->issRetidoRPS) ? 'S' : 'N';
+        $content .= $rps->issRetido ? 'S' : 'N';
         $content .= str_pad(
-            str_replace(['.', ','], '', number_format($rps->valorServicosRPS, 2)),
+            str_replace(['.', ','], '', number_format($rps->valorServicos, 2)),
             15,
             '0',
             STR_PAD_LEFT
         );
         $content .= str_pad(
-            str_replace(['.', ','], '', number_format($rps->valorDeducoesRPS, 2)),
+            str_replace(['.', ','], '', number_format($rps->valorDeducoes, 2)),
             15,
             '0',
             STR_PAD_LEFT
         );
-        $content .= str_pad($rps->codigoServicoRPS, 5, '0', STR_PAD_LEFT);
+        $content .= str_pad($rps->codigoServico, 5, '0', STR_PAD_LEFT);
         $content .= $rps->tomadorTipoDoc;
         $content .= str_pad($rps->tomadorCNPJCPF, 14, '0', STR_PAD_LEFT);
-        if ($rps->intermediarioTipoDoc != '3' && $rps->intermediarioCNPJCPF != '') {
-            $content .= $rps->intermediarioTipoDoc;
-            $content .= str_pad($rps->intermediarioCNPJCPF, 14, '0', STR_PAD_LEFT);
-            $content .= $rps->intermediarioISSRetido;
-        }
+        $content .= $rps->intermediarioTipoDoc;
+        $content .= str_pad($rps->intermediarioCNPJCPF, 14, '0', STR_PAD_LEFT);
+        $content .= $rps->issRetidoIntermediario ? 'S' : 'N';
         //$contentBytes = self::getBytes($content);
         $signature = base64_encode(self::$certificate->sign($content, self::$algorithm));
         return $signature;
+    }
+
+    /**
+     * Includes missing or unsupported properties in stdClass
+     * Convert all properties of object in lower case
+     * Replace all unsuported chars from data
+     * @param stdClass $std
+     * @param string[] $possible
+     * @return stdClass
+     */
+    protected function equilizeParameters(stdClass $std, array $possible): stdClass
+    {
+        $ppl = array_map('strtolower', $possible);
+        $std = self::propertiesToLower($std);
+        $equalized = Strings::equilizeParameters(
+            $std,
+            $ppl,
+            false
+        );
+        return self::propertiesToBack($equalized, $possible);
+    }
+
+    /**
+     * Change properties names of object to lower case
+     * @param stdClass $data
+     * @return stdClass
+     */
+    protected static function propertiesToLower(stdClass $data): stdClass
+    {
+        $properties = get_object_vars($data);
+        $clone = new stdClass();
+        foreach ($properties as $key => $value) {
+            if ($value instanceof stdClass) {
+                $value = self::propertiesToLower($value);
+            }
+            $nk = trim(strtolower($key));
+            $clone->{$nk} = $value;
+        }
+        return $clone;
+    }
+
+    /**
+     * Return properties do original name
+     * @param stdClass $data
+     * @param array $possible
+     * @return stdClass
+     */
+    protected static function propertiesToBack(stdClass $data, array $possible): stdClass
+    {
+        $new = new stdClass();
+        $properties = get_object_vars($data);
+        foreach ($properties as $key => $value) {
+            foreach ($possible as $p) {
+                if (strtolower($p) === $key) {
+                    $new->$p = $value;
+                    break;
+                }
+            }
+        }
+        return $new;
+    }
+
+    /**
+     * Formatação numerica condicional
+     * @param string|float|int|null $value
+     * @param int $decimal
+     * @return string|null
+     */
+    protected function conditionalNumberFormatting($value = null, int $decimal = 2): ?string
+    {
+        if (is_numeric($value)) {
+            return number_format($value, $decimal, '.', '');
+        }
+        return null;
     }
 }

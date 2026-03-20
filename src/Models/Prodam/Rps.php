@@ -17,56 +17,72 @@ namespace NFePHP\NFSe\Models\Prodam;
  */
 
 use InvalidArgumentException;
-use NFePHP\Common\Strings;
 use NFePHP\NFSe\Common\Rps as RpsBase;
+use stdClass;
 
+/**
+ * Propriedades para a assinatura
+ * @property string $prestadorIM
+ * @property string $serieRPS
+ * @property string $numeroRPS
+ * @property int $tomadorTipoDoc
+ * @property string $tomadorCNPJCPF
+ * @property int $intermediarioTipoDoc
+ * @property string $intermediarioCNPJCPF
+ * 
+ * Propriedades da NFS-e
+ * 
+ * @property stdClass|array $chaveRPS
+ * @property string $tipoRPS
+ * @property string $dataEmissao
+ * @property string $statusRPS
+ * @property string $tributacaoRPS
+ * @property float $valorDeducoes
+ * @property float $valorPIS
+ * @property float $valorCOFINS
+ * @property float $valorINSS
+ * @property float $valorIR
+ * @property float $valorCSLL
+ * @property string $codigoServico
+ * @property float $aliquotaServicos
+ * @property bool $issRetido
+ * @property array $cpfCnpjTomador
+ * @property ?string $inscricaoMunicipalTomador
+ * @property ?string $inscricaoEstadualTomador
+ * @property ?string $razaoSocialTomador
+ * @property ?stdClass|?array $enderecoTomador
+ * @property ?string $emailTomador
+ * @property ?array $cpfCnpjIntermediario
+ * @property ?string $inscricaoMunicipalIntermediario
+ * @property ?bool $issRetidoIntermediario
+ * @property ?string $emailIntermediario
+ * @property string $discriminacao
+ * @property ?float $valorCargaTributaria
+ * @property ?float $percentualCargaTributaria
+ * @property ?string $fonteCargaTributaria
+ * @property ?string $codigoCEI
+ * @property ?string $matriculaObra
+ * @property ?string $municipioPrestacao
+ * @property ?string $numeroEncapsulamento
+ * @property ?float $valorTotalRecebido
+ * @property ?float $valorInicialCobrado
+ * @property ?float $valorFinalCobrado
+ * @property ?float $valorMulta
+ * @property ?float $valorJuros
+ * @property float $valorIPI
+ * @property bool $exigibilidadeSuspensa
+ * @property bool $pagamentoParceladoAntecipado
+ * @property ?string $NCM
+ * @property string $NBS
+ * @property ?stdClass|?array $atvEvento
+ * @property ?string $cLocPrestacao
+ * @property ?string $cPaisPrestacao
+ * @property stdClass|array $ibsCbs
+ * @property string $versaoRPS
+ * @property float $valorServicos
+ */
 class Rps extends RpsBase
 {
-    public $versaoRPS = '';
-    public $prestadorIM = '';
-    public $serieRPS = '';
-    public $numeroRPS = '';
-    public $dtEmiRPS = '';
-    public $tipoRPS = '';
-    public $statusRPS = '';
-    public $tributacaoRPS = '';
-    public $valorServicosRPS = '';
-    public $valorDeducoesRPS = '';
-    public $valorPISRPS = '';
-    public $valorCOFINSRPS = '';
-    public $valorINSSRPS = '';
-    public $valorIRRPS = '';
-    public $valorCSLLRPS = '';
-    public $valorCargaTributariaRPS = '';
-    public $percentualCargaTributariaRPS = '';
-    public $fonteCargaTributariaRPS = '';
-    public $codigoCEIRPS = '';
-    public $matriculaObraRPS = '';
-    public $municipioPrestacaoRPS = '';
-    public $codigoServicoRPS = '';
-    public $aliquotaServicosRPS = '';
-    public $issRetidoRPS = false;
-    public $discriminacaoRPS = '';
-    public $tomadorTipoDoc = '2';
-    public $tomadorCNPJCPF = '';
-    public $tomadorIE = '';
-    public $tomadorIM = '';
-    public $tomadorRazao = '';
-    public $tomadorTipoLogradouro = '';
-    public $tomadorLogradouro = '';
-    public $tomadorNumeroEndereco = '';
-    public $tomadorComplementoEndereco = '';
-    public $tomadorBairro = '';
-    public $tomadorCodCidade = '';
-    public $tomadorSiglaUF = '';
-    public $tomadorCEP = '';
-    public $tomadorEmail = '';
-    public $intermediarioTipoDoc = '3';
-    public $intermediarioCNPJCPF = '';
-    public $intermediarioIM = '';
-    public $intermediarioISSRetido = 'N';
-    public $intermediarioEmail = '';
-
     private $aTp = [
         'RPS' => 'Recibo Provisório de Serviços',
         'RPS-M' => 'Recibo Provisório de Serviços proveniente de Nota Fiscal Conjugada (Mista)',
@@ -86,107 +102,29 @@ class Rps extends RpsBase
     ];
 
     /**
-     * Inscrição Municipal do Prestador do Serviço
-     * @param string $im
-     */
-    public function prestador($im)
-    {
-        $this->prestadorIM = $im;
-    }
-
-    /**
-     * Dados do Tomador do Serviço
-     * @param string $razao
-     * @param string $tipo
-     * @param string $cnpjcpf
-     * @param string $ie
-     * @param string $im
-     * @param string $email
-     */
-    public function tomador(
-        $razao,
-        $tipo,
-        $cnpjcpf,
-        $ie,
-        $im,
-        $email
-    ) {
-        $this->tomadorRazao = Strings::replaceSpecialsChars($razao);
-        $this->tomadorTipoDoc = $tipo;
-        if ($tipo == '2') {
-            $cnpjcpf = str_pad($cnpjcpf, 14, '0', STR_PAD_LEFT);
-        }
-        $this->tomadorCNPJCPF = $cnpjcpf;
-        $this->tomadorIE = $ie;
-        $this->tomadorIM = $im;
-        $this->tomadorEmail = $email;
-    }
-
-    /**
-     * Endereço do Tomador do serviço
-     * @param string $tipo
-     * @param string $logradouro
-     * @param string $numero
-     * @param string $complemento
-     * @param string $bairro
-     * @param string $cmun
-     * @param string $uf
-     * @param string $cep
-     */
-    public function tomadorEndereco(
-        $tipo,
-        $logradouro,
-        $numero,
-        $complemento,
-        $bairro,
-        $cmun,
-        $uf,
-        $cep
-    ) {
-        $this->tomadorTipoLogradouro = $tipo;
-        $this->tomadorLogradouro = Strings::replaceSpecialsChars($logradouro);
-        $this->tomadorNumeroEndereco = $numero;
-        $this->tomadorComplementoEndereco = Strings::replaceSpecialsChars($complemento);
-        $this->tomadorBairro = Strings::replaceSpecialsChars($bairro);
-        $this->tomadorCodCidade = $cmun;
-        $this->tomadorSiglaUF = $uf;
-        $this->tomadorCEP = $cep;
-    }
-
-    /**
-     * Dados do intermediário
-     * @param string $tipo
-     * @param string $cnpj
-     * @param string $im
-     * @param string $email
-     */
-    public function intermediario(
-        $tipo,
-        $cnpj,
-        $im,
-        $email
-    ) {
-        $this->intermediarioTipoDoc = $tipo;
-        $this->intermediarioCNPJCPF = $cnpj;
-        $this->intermediarioIM = $im;
-        $this->intermediarioEmail = strtolower($email);
-    }
-
-    /**
      * Versão do layout usado 1 ou 2
      * @param string $versao
      */
-    public function versao($versao)
+    public function versao(string $versao): void
     {
         $versao = preg_replace('/[^0-9]/', '', $versao);
         $this->versaoRPS = $versao;
     }
 
     /**
+     * Inscrição Municipal do Prestador do Serviço
+     * @param string $im
+     */
+    public function prestador(string $im)
+    {
+        $this->prestadorIM = $im;
+    }
+
+    /**
      * Série do RPS
      * @param string $serie
      */
-    public function serie($serie)
+    public function serie(string $serie)
     {
         $serie = substr(trim($serie), 0, 5);
         $this->serieRPS = $serie;
@@ -194,10 +132,10 @@ class Rps extends RpsBase
 
     /**
      * Numero do RPS
-     * @param string $numero
+     * @param int $numero
      * @throws InvalidArgumentException
      */
-    public function numero($numero)
+    public function numero(int $numero)
     {
         if (!is_numeric($numero) || $numero <= 0) {
             $msg = "[$numero] não é aceito. O numero do RPS deve ser numerico maior ou igual a 1";
@@ -207,20 +145,11 @@ class Rps extends RpsBase
     }
 
     /**
-     * Data do RPS
-     * @param string $data
-     */
-    public function data($data)
-    {
-        $this->dtEmiRPS = $data;
-    }
-
-    /**
      * Status do RPS Normal ou Cancelado
      * @param string $status
      * @throws InvalidArgumentException
      */
-    public function status($status)
+    public function status(string $status): void
     {
         $status = strtoupper(trim($status));
         if (!$this->validData(['N' => 0, 'C' => 1], $status)) {
@@ -238,7 +167,7 @@ class Rps extends RpsBase
      *
      * @param string $tipo
      */
-    public function tipo($tipo)
+    public function tipo(string $tipo): void
     {
         $tipo = strtoupper(trim($tipo));
         if (!$this->validData($this->aTp, $tipo)) {
@@ -262,7 +191,7 @@ class Rps extends RpsBase
      *
      * @param string $tributacao
      */
-    public function tributacao($tributacao)
+    public function tributacao(string $tributacao): void
     {
         $tributacao = strtoupper(trim($tributacao));
         if (!$this->validData($this->aTrib, $tributacao)) {
@@ -272,159 +201,29 @@ class Rps extends RpsBase
         $this->tributacaoRPS = $tributacao;
     }
 
-    /**
-     * Código do serviço prestado
-     * @param string $cod
+        /**
+     * Indicador de CPF/CNPJ do Tomador e intermediário para assinatura
+     * 1 para CPF.
+     * 2 para CNPJ.
+     * 3 para Não informado
+     * 
+     * @param int $indDocTomador
+     * @param string $cnpjcpfTomador
+     * @param int $indDocIntermediario
+     * @param string $cnpjcpfIntermediario
      */
-    public function codigoServico($cod = '')
-    {
-        $this->codigoServicoRPS = str_pad($cod, 5, '0', STR_PAD_LEFT);
+    public function docTomador(int $indDocTomador, string $cnpjcpfTomador, int $indDocIntermediario, string $cnpjcpfIntermediario) {
+        $this->tomadorTipoDoc = $indDocTomador;
+        $this->tomadorCNPJCPF = str_pad($cnpjcpfTomador, 14, '0', STR_PAD_LEFT);
+
+        $this->intermediarioTipoDoc = $indDocIntermediario;
+        $this->intermediarioCNPJCPF = str_pad($cnpjcpfIntermediario, 14, '0', STR_PAD_LEFT);
     }
 
-    /**
-     * Valor dos Serviços prestados
-     * @param float $valor
+    /** 
+     * Valor dos serviços
      */
-    public function valorServicos($valor)
-    {
-        $this->valorServicosRPS = number_format($valor, 2, '.', '');
-    }
-
-    /**
-     * Valor das deduções aplicáveis ao serviço
-     * @param float $valor
-     */
-    public function valorDeducoes($valor)
-    {
-        $this->valorDeducoesRPS = number_format($valor, 2, '.', '');
-    }
-
-    /**
-     * Aliquota do ISS do serviço
-     * @param float $valor
-     * @throws InvalidArgumentException
-     */
-    public function aliquotaServico($valor)
-    {
-        if ($valor > 1 || $valor < 0) {
-            $msg = 'Voce deve indicar uma aliquota em fração ex. 0.12.';
-            throw new InvalidArgumentException($msg);
-        }
-        $this->aliquotaServicosRPS = number_format($valor, 4, '.', '');
-    }
-
-    /**
-     * Indicador de retenção de ISS
-     * 1 - iss retido pelo tomador
-     * 2 - sem retenção
-     * 3 - iss retido pelo intermediário
-     * @param integer $flag
-     */
-    public function issRetido($flag)
-    {
-        $this->issRetidoRPS = false;
-        $this->intermediarioISSRetido = 'N';
-        if ($flag == 1) {
-            $this->issRetidoRPS = true;
-        } elseif ($flag == 3) {
-            $this->issRetidoRPS = true;
-            $this->intermediarioISSRetido = 'S';
-        }
-    }
-
-    /**
-     * Discriminação do serviço prestado
-     * @param string $desc
-     */
-    public function discriminacao($desc)
-    {
-        $this->discriminacaoRPS = Strings::replaceSpecialsChars(trim($desc));
-    }
-
-    /**
-     * Carga tributária total estimada
-     * Dados normalmente obtidos no IBPT
-     * @param float $valor
-     * @param float $percentual
-     * @param string $fonte
-     */
-    public function cargaTributaria($valor, $percentual, $fonte)
-    {
-        $this->valorCargaTributariaRPS = number_format($valor, 2, '.', '');
-        $this->percentualCargaTributariaRPS = number_format($percentual, 4, '.', '');
-        $this->fonteCargaTributariaRPS = substr(Strings::replaceSpecialsChars($fonte), 0, 10);
-    }
-
-    /**
-     * Valor referente ao recolhimento do PIS
-     * @param float $valor
-     */
-    public function valorPIS($valor)
-    {
-        $this->valorPISRPS = number_format($valor, 2, '.', '');
-    }
-
-    /**
-     * Valor referente ao recolhimento da COFINS
-     * @param float $valor
-     */
-    public function valorCOFINS($valor)
-    {
-        $this->valorCOFINSRPS = number_format($valor, 2, '.', '');
-    }
-
-    /**
-     * Valor referente ao recolhimento da contribuição ao INSS
-     * @param float $valor
-     */
-    public function valorINSS($valor)
-    {
-        $this->valorINSSRPS = number_format($valor, 2, '.', '');
-    }
-
-    /**
-     * Valor refenrente ao IR (Imposto de Renda)
-     * @param float $valor
-     */
-    public function valorIR($valor)
-    {
-        $this->valorIRRPS = number_format($valor, 2, '.', '');
-    }
-
-    /**
-     * Valor referente a CSLL (contribuição Sobre o Lucro Líquido)
-     * @param float $valor
-     */
-    public function valorCSLL($valor)
-    {
-        $this->valorCSLLRPS = number_format($valor, 2, '.', '');
-    }
-
-    /**
-     * Código Matricula no CEI (Cadastro Especifico do INSS)
-     * @param string $cod
-     */
-    public function codigoCEI($cod)
-    {
-        $this->codigoCEIRPS = $cod;
-    }
-
-    /**
-     * Identificaçao ou número de matricula da Obra Civil
-     * @param string $matricula
-     */
-    public function matriculaObra($matricula)
-    {
-        $this->matriculaObraRPS = $matricula;
-    }
-
-    /**
-     * Código IBGE para o municio onde o serviço
-     * foi prestado
-     * @param string $cmun
-     */
-    public function municipioPrestacao($cmun)
-    {
-        $this->municipioPrestacaoRPS = $cmun;
+    public function valorServicos(): float {
+        return $this->valorTotalRecebido ?? $this->valorFinalCobrado ?? 0;
     }
 }
