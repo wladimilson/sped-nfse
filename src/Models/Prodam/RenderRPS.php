@@ -120,42 +120,42 @@ class RenderRPS
         $this->dom->addChild(
             $root,
             'ValorDeducoes',
-            $rps->valorDeducoes,
+            $this->conditionalNumberFormatting($rps->valorDeducoes),
             true,
             'Valor das Deduções',
         );
         $this->dom->addChild(
             $root,
             'ValorPIS',
-            $rps->valorPIS,
+            $this->conditionalNumberFormatting($rps->valorPIS),
             true,
             'Valor do PIS'
         );
         $this->dom->addChild(
             $root,
             'ValorCOFINS',
-            $rps->valorCOFINS,
+            $this->conditionalNumberFormatting($rps->valorCOFINS),
             true,
             'Valor do COFINS'
         );
         $this->dom->addChild(
             $root,
             'ValorINSS',
-            $rps->valorINSS,
+            $this->conditionalNumberFormatting($rps->valorINSS),
             true,
             'Valor do INSS'
         );
         $this->dom->addChild(
             $root,
             'ValorIR',
-            $rps->valorIR,
+            $this->conditionalNumberFormatting($rps->valorIR),
             true,
             'Valor do IR',
         );
         $this->dom->addChild(
             $root,
             'ValorCSLL',
-            $rps->valorCSLL,
+            $this->conditionalNumberFormatting($rps->valorCSLL),
             true,
             'Valor do CSLL'
         );
@@ -195,7 +195,7 @@ class RenderRPS
         $this->dom->addChild(
             $root,
             'InscricaoEstadualTomador',
-            $rps->inscricaoEstadualTomador,
+            Strings::onlyNumbers($rps->inscricaoEstadualTomador),
             false,
             'Inscrição estadual do tomador'
         );
