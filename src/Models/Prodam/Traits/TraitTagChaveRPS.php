@@ -51,21 +51,21 @@ trait TraitTagChaveRPS
         $this->dom->addChild(
             $this->chaveRPS,
             "InscricaoPrestador",
-            $std->inscricaoPrestador,
+            $std->InscricaoPrestador,
             true,
             $identificador . "Inscrição municipal do prestador de serviços"
         );
         $this->dom->addChild(
             $this->chaveRPS,
             "SerieRPS",
-            $std->serieRPS,
+            $std->SerieRPS,
             false,
             $identificador . "Série do RPS"
         );
         $this->dom->addChild(
             $this->chaveRPS,
             "NumeroRPS",
-            $std->numeroRPS,
+            $std->NumeroRPS,
             true,
             $identificador . "Número do RPS"
         );

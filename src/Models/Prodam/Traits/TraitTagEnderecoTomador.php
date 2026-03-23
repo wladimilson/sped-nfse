@@ -74,8 +74,8 @@ trait TraitTagEnderecoTomador
         $this->dom->addChild(
             $this->enderecoTomador,
             'Cidade',
-            Strings::onlyNumbers($std->cidade),
-            true,
+            Strings::onlyNumbers($std->Cidade),
+            false,
             $identificador . 'Cidade endereço do tomador'
         );
         $this->dom->addChild(

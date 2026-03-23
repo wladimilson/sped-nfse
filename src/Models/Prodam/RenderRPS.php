@@ -16,6 +16,7 @@ namespace NFePHP\NFSe\Models\Prodam;
  * @link      http://github.com/nfephp-org/sped-nfse for the canonical source repository
  */
 
+use DOMElement;
 use NFePHP\Common\Certificate;
 use NFePHP\Common\DOMImproved as Dom;
 use NFePHP\Common\Strings;
@@ -27,7 +28,6 @@ use NFePHP\NFSe\Models\Prodam\Traits\TraitTagEnd;
 use NFePHP\NFSe\Models\Prodam\Traits\TraitTagEnderecoExterior;
 use NFePHP\NFSe\Models\Prodam\Traits\TraitTagEnderecoTomador;
 use NFePHP\NFSe\Models\Prodam\Traits\TraitTagIBSCBS;
-use NFePHP\NFSe\Models\Prodam\Traits\TraitTagValores;
 use stdClass;
 
 class RenderRPS
@@ -40,7 +40,6 @@ class RenderRPS
     use TraitTagEnderecoExterior;
     use TraitTagEnderecoTomador;
     use TraitTagIBSCBS;
-    use TraitTagValores;
 
     protected Dom $dom;
     protected Certificate $certificate;
@@ -209,15 +208,9 @@ class RenderRPS
         );
 
         //tag EnderecoTomador
-        if ($rps->enderecoTomador !== null) {
+        if ($rps->enderecoTomador !== null) { // Os campos do endereço são obrigatórios apenas para tomadores pessoa jurídica (CNPJ informado)
             $endtomador = $this->tagEnderecoTomador((object) $rps->enderecoTomador);
-            $this->dom->addChild(
-                $root,
-                'EnderecoTomador',
-                $endtomador,
-                false, // Os campos do endereço são obrigatórios apenas para tomadores pessoa jurídica (CNPJ informado)
-                'Endereço do tomador'
-            );
+            $this->dom->appChild($root, $endtomador, 'Endereço do tomador');
         }
         
         $this->dom->addChild(
@@ -364,14 +357,14 @@ class RenderRPS
             $root,
             'ExigibilidadeSuspensa',
             (int) $rps->exigibilidadeSuspensa,
-            false,
+            true,
             'Indica se é uma emissão com exigibilidade suspensa'
         );
         $this->dom->addChild(
             $root,
             'PagamentoParceladoAntecipado',
             (int) $rps->pagamentoParceladoAntecipado,
-            false,
+            true,
             'Indica de nota fiscal de pagamento parcelado antecipado (realizado antes do fornecimento)'
         );
 
@@ -386,7 +379,7 @@ class RenderRPS
             $root,
             'NBS',
             Strings::onlyNumbers($rps->NBS),
-            false,
+            true,
             'Número NBS (Nomenclatura Brasileira de Serviços)'
         );
 
@@ -424,13 +417,8 @@ class RenderRPS
         
         // Grupo de Informações do IBS e da CBS
         $IBSCBS = $this->tagIBSCBS((object) $rps->ibsCbs);
-        $this->dom->addChild(
-            $root,
-            'IBSCBS',
-            $IBSCBS,
-            true,
-            'Informações do IBS e da CBS'
-        );
+        $this->dom->appChild($root, $IBSCBS, 'Informações do IBS e da CBS');
+        
         //finaliza
         $this->dom->appendChild($root);
         $xml = str_replace('<?xml version="1.0" encoding="utf-8"?>', '', $this->dom->saveXML());
@@ -546,5 +534,30 @@ class RenderRPS
             return number_format($value, $decimal, '.', '');
         }
         return null;
+    }
+
+    /**
+     * Converte um object|array para um DOMElement|xml
+     * @param object|array $value
+     * @param DOMElement $parent
+     * @return DOMElement
+     */
+    protected function objectToDOMElement(object|array $value, DOMElement|null $parent): DOMElement
+    {
+        foreach ($value as $property_name => $property_value) {
+            if (is_object($property_value) || is_array($property_value)) {
+                $root = $this->dom->createElement($property_name);
+                $child = $this->objectToDOMElement($property_value, $root);
+                $this->dom->appChild($parent, $child);
+                return $parent;
+            }
+            $this->dom->addChild(
+                $parent,
+                $property_name,
+                $property_value,
+                true,
+            );
+        }
+        return $parent;
     }
 }

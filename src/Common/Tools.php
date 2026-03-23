@@ -128,8 +128,8 @@ abstract class Tools
     {
         $this->config = $config;
 
-        //Se o model já possuia  versão não tem necessidade de pegar da configuração
-        if (empty($this->versao)) {
+        //Se a versão do model for diferente da configuração pegar da configuração
+        if ($config->versao !== $this->versao) {
             $this->versao = $config->versao;
         }
 

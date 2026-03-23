@@ -15,6 +15,8 @@ use NFePHP\Common\Strings;
  */
 trait TraitTagIBSCBS
 {
+    use TraitTagValores;
+
     /**
      * Informações declaradas pelo emitente referentes ao IBS e à CBS
      * tag <root>/IBSCBS
@@ -29,6 +31,7 @@ trait TraitTagIBSCBS
             'tpOper',
             'tpEnteGov',
             'indDest',
+            'valores',
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = 'Tag IBSCBS -';
@@ -75,6 +78,11 @@ trait TraitTagIBSCBS
             true,
             $identificador . 'Tipo do ente da compra governamental'
         );
+
+        // Informações relacionadas aos valores do serviço prestado para IBS e à CBS
+        $valores = $this->tagValores((object) $std->valores);
+        $this->dom->appChild($this->IBSCBS, $valores, 'Informações do IBS e da CBS');
+
         return $this->IBSCBS;
     }
 

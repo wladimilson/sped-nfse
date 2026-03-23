@@ -13,7 +13,6 @@ use DOMElement;
  * @method equilizeParameters($std, $possible)
  * @method conditionalNumberFormatting($value, $decimal = 2)
  */
-
 trait TraitTagValores
 {
     use TraitTagEnd;
@@ -27,9 +26,37 @@ trait TraitTagValores
      * tag <root>/IBSCBS/valores
      * NOTA: Ajustado para NFS-e v2
      */
-    protected function tagValores(): DOMElement
+    protected function tagValores(stdClass $std): DOMElement
     {
+        $possible = [
+            'gReeRepRes',
+            'trib',
+        ];
+        $std = $this->equilizeParameters($std, $possible);
+        $identificador = 'Tag valores - ';
+
         $this->valores = $this->dom->createElement("valores");
+
+        if ($std->gReeRepRes !== null) {
+            $gReeRepRes = $this->dom->createElement("gReeRepRes");
+            $gReeRepRes = $this->objectToDOMElement($std->gReeRepRes, $gReeRepRes);
+            $this->dom->appChild(
+                $this->valores,
+                $gReeRepRes,
+                $identificador . 'Tipo de documento do repositório nacional'
+            );
+        }
+
+        if ($std->trib !== null) {
+            $trib = $this->dom->createElement("trib");
+            $trib = $this->objectToDOMElement($std->trib, $trib);
+            $this->dom->appChild(
+                $this->valores,
+                $trib,
+                $identificador . 'Tipo de documento do repositório nacional'
+            );
+        }
+
         return $this->valores;
     }
 
