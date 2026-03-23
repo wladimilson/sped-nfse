@@ -432,7 +432,7 @@ class RenderRPS
      */
     private function signstr(Rps $rps)
     {
-        $content = str_pad($rps->prestadorIM, 8, '0', STR_PAD_LEFT);
+        $content = str_pad($rps->prestadorIM, 12, '0', STR_PAD_LEFT);
         $content .= str_pad($rps->serieRPS, 5, ' ', STR_PAD_RIGHT);
         $content .= str_pad($rps->numeroRPS, 12, '0', STR_PAD_LEFT);
         $content .= str_replace("-", "", $rps->dataEmissao);
@@ -453,7 +453,7 @@ class RenderRPS
         );
         $content .= str_pad($rps->codigoServico, 5, '0', STR_PAD_LEFT);
         $content .= $rps->tomadorTipoDoc;
-        $content .= str_pad($rps->tomadorCNPJCPF, 14, '0', STR_PAD_LEFT);
+        $content .= str_pad(Strings::onlyNumbers($rps->tomadorCNPJCPF), 14, '0', STR_PAD_LEFT);
         $content .= $rps->intermediarioTipoDoc;
         $content .= str_pad($rps->intermediarioCNPJCPF, 14, '0', STR_PAD_LEFT);
         $content .= $rps->issRetidoIntermediario ? 'S' : 'N';

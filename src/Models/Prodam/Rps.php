@@ -224,6 +224,6 @@ class Rps extends RpsBase
      * Valor dos serviços
      */
     public function valorServicos(): float {
-        return $this->valorTotalRecebido ?? $this->valorFinalCobrado ?? 0;
+        return $this->valorInicialCobrado ?? $this->valorFinalCobrado ?? 0;
     }
 }
