@@ -439,12 +439,21 @@ class RenderRPS
         $content .= $rps->tributacaoRPS;
         $content .= $rps->statusRPS;
         $content .= $rps->issRetido ? 'S' : 'N';
-        $content .= str_pad(
-            str_replace(['.', ','], '', number_format($rps->valorServicos, 2)),
-            15,
-            '0',
-            STR_PAD_LEFT
-        );
+        if ($rps->valorInicialCobrado > 0) {
+            $content .= str_pad(
+                str_replace(['.', ','], '', number_format($rps->valorInicialCobrado, 2)),
+                15,
+                '0',
+                STR_PAD_LEFT
+            );
+        } else {
+            $content .= str_pad(
+                str_replace(['.', ','], '', number_format($rps->valorFinalCobrado, 2)),
+                15,
+                '0',
+                STR_PAD_LEFT
+            );
+        }
         $content .= str_pad(
             str_replace(['.', ','], '', number_format($rps->valorDeducoes, 2)),
             15,
@@ -454,9 +463,11 @@ class RenderRPS
         $content .= str_pad($rps->codigoServico, 5, '0', STR_PAD_LEFT);
         $content .= $rps->tomadorTipoDoc;
         $content .= str_pad(Strings::onlyNumbers($rps->tomadorCNPJCPF), 14, '0', STR_PAD_LEFT);
-        $content .= $rps->intermediarioTipoDoc;
-        $content .= str_pad($rps->intermediarioCNPJCPF, 14, '0', STR_PAD_LEFT);
-        $content .= $rps->issRetidoIntermediario ? 'S' : 'N';
+        if ($rps->intermediarioTipoDoc > 0) {
+            $content .= $rps->intermediarioTipoDoc;
+            $content .= str_pad(Strings::onlyNumbers($rps->intermediarioCNPJCPF), 14, '0', STR_PAD_LEFT);
+            $content .= $rps->issRetidoIntermediario ? 'S' : 'N';
+        }
         //$contentBytes = $this->getBytes($content);
         $signature = base64_encode($this->certificate->sign($content, $this->algorithm));
         return $signature;

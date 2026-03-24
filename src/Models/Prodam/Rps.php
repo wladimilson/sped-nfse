@@ -79,7 +79,6 @@ use stdClass;
  * @property ?string $cPaisPrestacao
  * @property stdClass|array $ibsCbs
  * @property string $versaoRPS
- * @property float $valorServicos
  */
 class Rps extends RpsBase
 {
@@ -218,12 +217,5 @@ class Rps extends RpsBase
 
         $this->intermediarioTipoDoc = $indDocIntermediario;
         $this->intermediarioCNPJCPF = str_pad($cnpjcpfIntermediario, 14, '0', STR_PAD_LEFT);
-    }
-
-    /** 
-     * Valor dos serviços
-     */
-    public function valorServicos(): float {
-        return $this->valorInicialCobrado ?? $this->valorFinalCobrado ?? 0;
     }
 }

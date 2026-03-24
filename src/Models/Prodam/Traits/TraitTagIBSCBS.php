@@ -16,6 +16,7 @@ use NFePHP\Common\Strings;
 trait TraitTagIBSCBS
 {
     use TraitTagValores;
+    use TraitTagEnd;
 
     /**
      * Informações declaradas pelo emitente referentes ao IBS e à CBS
@@ -82,6 +83,35 @@ trait TraitTagIBSCBS
         // Informações relacionadas aos valores do serviço prestado para IBS e à CBS
         $valores = $this->tagValores((object) $std->valores);
         $this->dom->appChild($this->IBSCBS, $valores, 'Informações do IBS e da CBS');
+
+        // Informações sobre o Tipo de Imóvel/Obra
+        if ($std->imovelobra !== null) {
+            $imovelobra = $this->dom->createElement("imovelobra");
+
+            // Tipo Endereço simplificado para o IBSCBS
+            if ($std->imovelobra->end !== null) {
+                $end = $this->tagEnd($std->imovelobra->end);
+                $this->dom->appChild(
+                    $imovelobra,
+                    $end,
+                    $identificador . 'Endereço simplificado para o IBSCBS'
+                );
+            }
+            else {
+            $imovelobra = $this->objectToDOMElement($std->imovelobra, $imovelobra);
+                $this->dom->appChild(
+                    $this->IBSCBS,
+                    $imovelobra,
+                    $identificador . 'Tipo de Imóvel/Obra'
+                );
+            }
+
+            $this->dom->appChild(
+                $this->IBSCBS,
+                $imovelobra,
+                $identificador . 'Informações sobre o Tipo de Imóvel/Obra'
+            );
+        }
 
         return $this->IBSCBS;
     }

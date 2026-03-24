@@ -52,7 +52,7 @@ trait TraitTagEnd
             'nro',
             $std->nro,
             true,
-            $identificador . 'Numero do Logradouro do tomador'
+            $identificador . 'Numero do Logradouro'
         );
         $this->dom->addChild(
             $this->end,
