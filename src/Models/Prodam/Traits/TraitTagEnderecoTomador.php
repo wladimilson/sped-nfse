@@ -24,10 +24,10 @@ trait TraitTagEnderecoTomador
     public function tagEnderecoTomador(stdClass $std): DOMElement
     {
         $possible = [
-            'TipoLogradouro',
-            'Logradouro',
-            'NumeroEndereco',
-            'ComplementoEndereco',
+            'tipoLogradouro',
+            'logradouro',
+            'numeroEndereco',
+            'complementoEndereco',
             'Bairro',
             'Cidade',
             'UF',

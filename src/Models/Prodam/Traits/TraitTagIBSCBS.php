@@ -33,6 +33,7 @@ trait TraitTagIBSCBS
             'tpEnteGov',
             'indDest',
             'valores',
+            'imovelobra',
         ];
         $std = $this->equilizeParameters($std, $possible);
         $identificador = 'Tag IBSCBS -';
@@ -90,7 +91,7 @@ trait TraitTagIBSCBS
 
             // Tipo Endereço simplificado para o IBSCBS
             if ($std->imovelobra->end !== null) {
-                $end = $this->tagEnd($std->imovelobra->end);
+                $end = $this->tagEnd((object) $std->imovelobra->end);
                 $this->dom->appChild(
                     $imovelobra,
                     $end,
@@ -98,7 +99,7 @@ trait TraitTagIBSCBS
                 );
             }
             else {
-            $imovelobra = $this->objectToDOMElement($std->imovelobra, $imovelobra);
+                $imovelobra = $this->objectToDOMElement($std->imovelobra, $imovelobra);
                 $this->dom->appChild(
                     $this->IBSCBS,
                     $imovelobra,

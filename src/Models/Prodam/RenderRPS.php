@@ -311,7 +311,7 @@ class RenderRPS
             $root,
             'ValorTotalRecebido',
             $this->conditionalNumberFormatting($rps->valorTotalRecebido),
-            true,
+            false,
             'Valor do total recebido'
         );
         if (isset($rps->valorInicialCobrado)){
