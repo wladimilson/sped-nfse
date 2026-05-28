@@ -306,7 +306,6 @@ class RenderRPS
             'Código que representa o número do encapsulamento da obra'
         );
 
-
         $this->dom->addChild(
             $root,
             'ValorTotalRecebido',
@@ -314,6 +313,15 @@ class RenderRPS
             false,
             'Valor do total recebido'
         );
+
+        $this->dom->addChild(
+            $root,
+            'RetencaoPisCofins',
+            $rps->retencaoPisCofins,
+            false,
+            'Tipo de retenção para os tributos federais PIS/COFINS e CSLL'
+        );
+
         if (isset($rps->valorInicialCobrado)){
             $this->dom->addChild(
                 $root,

@@ -65,6 +65,7 @@ use stdClass;
  * @property ?string $municipioPrestacao
  * @property ?string $numeroEncapsulamento
  * @property ?float $valorTotalRecebido
+ * @property ?string $retencaoPisCofins
  * @property ?float $valorInicialCobrado
  * @property ?float $valorFinalCobrado
  * @property ?float $valorMulta
@@ -217,5 +218,29 @@ class Rps extends RpsBase
 
         $this->intermediarioTipoDoc = $indDocIntermediario;
         $this->intermediarioCNPJCPF = str_pad($cnpjcpfIntermediario, 14, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Tipo de retenção para os tributos federais PIS/COFINS e CSLL:
+     * 
+     *  0 - PIS/COFINS/CSLL Não Retidos.
+     *  3 - PIS/COFINS/CSLL Retidos.
+     *  4 - PIS/COFINS Retidos, CSLL Não Retido.
+     *  5 - PIS Retido, COFINS/CSLL Não Retidos.
+     *  6 - COFINS Retido, PIS/CSLLNão Retidos.
+     *  7 - PIS Não Retido, COFINS/CSLL Retidos.
+     *  8 - PIS/COFINS Não Retidos, CSLL Retido.
+     *  9 - COFINS Não Retido, PIS/CSLL Retidos.
+     *
+     * @param string $tipoRetencao
+     */
+    public function tipoRetencaoPisConfis(string $tipoRetencao): void
+    {
+        $validRetencao = ['0', '3', '4', '5', '6', '7', '8', '9'];
+        if (!in_array($tipoRetencao, $validRetencao, true)) {
+            $msg = "[$tipoRetencao] não é um código válido, ente" . implode(',', $validRetencao);
+            throw new InvalidArgumentException($msg);
+        }
+        $this->retencaoPisCofins = $tipoRetencao;
     }
 }
